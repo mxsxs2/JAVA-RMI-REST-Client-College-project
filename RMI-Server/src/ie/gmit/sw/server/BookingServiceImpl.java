@@ -1,6 +1,7 @@
 package ie.gmit.sw.server;
 
 
+import com.mongodb.client.MongoDatabase;
 import ie.gmit.sw.model.Booking;
 import ie.gmit.sw.model.Car;
 import ie.gmit.sw.model.Person;
@@ -10,9 +11,12 @@ import java.rmi.server.*;
 
 public class BookingServiceImpl extends UnicastRemoteObject implements BookingService {
     private static final long serialVersionUID = 1L;
+    //Mongo database
+    private MongoDatabase mongoDb;
 
-    protected BookingServiceImpl() throws RemoteException {
+    protected BookingServiceImpl(MongoDatabase db) throws RemoteException {
         super();
+        mongoDb = db;
     }
 
 

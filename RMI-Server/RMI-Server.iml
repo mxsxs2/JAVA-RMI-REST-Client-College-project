@@ -8,5 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="javax.xml.bind_2.2.12.v201410011542" level="project" />
+    <orderEntry type="library" name="mongo-java-driver-3.0.0" level="project" />
   </component>
 </module>

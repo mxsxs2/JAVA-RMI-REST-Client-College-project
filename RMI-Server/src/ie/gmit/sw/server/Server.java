@@ -1,5 +1,7 @@
 package ie.gmit.sw.server;
 
+import com.mongodb.client.MongoDatabase;
+
 import java.rmi.*;
 import java.rmi.registry.*;
 
@@ -20,14 +22,15 @@ public class Server {
     }
 
     /**
-     * Starts the RMI service
+     * Starts injects mongodb and starts rmiservice
      *
+     * @param db
      * @throws Exception
      */
-    public void Start() throws Exception {
+    public void Start(MongoDatabase db) throws Exception {
 
         //Interface for booking
-        BookingService s = new BookingServiceImpl();
+        BookingService s = new BookingServiceImpl(db);
 
         //Start the RMI regstry on port 1099
         LocateRegistry.createRegistry(port);
@@ -48,7 +51,7 @@ public class Server {
         //Loop the args
         for (int i = 0; i < args.length; i++) {
             //Check if port exists
-            if (args[i].equals("port") && args.length < i + 1) {
+            if (args[i].equals("-port") && args.length < i + 1) {
                 try {
                     //Try to parse the port number
                     port = Integer.valueOf(args[i + 1]);
