@@ -4,7 +4,7 @@
 
     <xsd:complexType name='car'>
         <xsd:sequence>
-            <xsd:element name='reg'>
+            <xsd:element name='_id'>
                 <xsd:simpleType>
                     <xsd:restriction base="xsd:string">
                         <!-- https://www.mrexcel.com/forum/excel-questions/309455-regular-expressions-irish-number-plate.html -->
@@ -38,14 +38,18 @@
         </xsd:sequence>
     </xsd:complexType>
 
+    <xsd:complexType name="bookingTimeFrame">
+        <xsd:sequence>
+            <xsd:element name='bookingTimeFrom' type='xsd:dateTime'/>
+            <xsd:element name='bookingTimeTo' type='xsd:dateTime'/>
+        </xsd:sequence>
+    </xsd:complexType>
 
     <xsd:complexType name="booking">
         <xsd:sequence>
             <xsd:element name='_id' type='xsd:string'/>
-            <xsd:element name='address' type='gmit:person'/>
-            <xsd:element name='car' type='gmit:person'/>
-            <xsd:element name='bookingTimeFrom' type='xsd:dateTime'/>
-            <xsd:element name='bookingTimeTo' type='xsd:dateTime'/>
+            <xsd:element name='person' type='gmit:person'/>
+            <xsd:element name='bookingTimeFrame' type='gmit:bookingTimeFrame'/>
             <xsd:element name='reservationTime' type='xsd:dateTime'/>
         </xsd:sequence>
     </xsd:complexType>

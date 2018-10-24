@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="mongodb-driver-3.8.2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/mongodb-driver-3.8.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/bson-3.8.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/mongodb-driver-core-3.8.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

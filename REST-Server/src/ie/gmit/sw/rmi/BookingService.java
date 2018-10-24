@@ -12,12 +12,10 @@ package ie.gmit.sw.server;
  */
 
 import ie.gmit.sw.model.Booking;
-import ie.gmit.sw.model.BookingTimeFrame;
 import ie.gmit.sw.model.Car;
+import ie.gmit.sw.model.Person;
 
-import java.rmi.Remote;
-import java.rmi.RemoteException;
-import java.util.ArrayList;
+import java.rmi.*;
 
 public interface BookingService extends Remote {
     public Booking getBooking(String id) throws RemoteException;
@@ -25,8 +23,4 @@ public interface BookingService extends Remote {
     public boolean addBooking(Booking b) throws RemoteException;
 
     public boolean changeBooking(Booking b) throws RemoteException;
-
-    public ArrayList<Car> getCars(String c) throws RemoteException;
-
-    public boolean isCarAvailable(String carId, BookingTimeFrame timeFrame) throws RemoteException;
 }

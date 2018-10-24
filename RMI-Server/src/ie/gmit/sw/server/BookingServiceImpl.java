@@ -1,55 +1,51 @@
 package ie.gmit.sw.server;
 
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.util.JSON;
 import ie.gmit.sw.model.Booking;
+import ie.gmit.sw.model.BookingTimeFrame;
+import ie.gmit.sw.model.Car;
 import org.bson.Document;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.stream.StreamSource;
-import java.io.StringReader;
 import java.io.StringWriter;
-import java.rmi.*;
-import java.rmi.server.*;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 
 public class BookingServiceImpl extends UnicastRemoteObject implements BookingService {
     private static final long serialVersionUID = 1L;
     //Name of the database collection
-    private static final String collectionName = "carbooking";
-    //The database collection
-    private MongoCollection collection;
+    private static final String bookingCollectionName = "bookings";
+    //Name of the database collection
+    private static final String carCollectionName = "cars";
+    //The database booking collection
+    private MongoCollection bookingCollection;
+    //The database car collection
+    private MongoCollection carCollection;
 
     protected BookingServiceImpl(MongoDatabase db) throws RemoteException {
         super();
-        collection = db.getCollection(collectionName);
+        bookingCollection = db.getCollection(bookingCollectionName);
+        carCollection = db.getCollection(carCollectionName);
     }
 
 
     @Override
     public Booking getBooking(String id) throws RemoteException {
         //Create new query object
-        BasicDBObject query = new BasicDBObject();
+        Document query = new Document();
         //Find by id
-        query.append("id", id);
+        query.append("_id", id);
         //Set up mongo find
-        FindIterable fi = collection.find(query);
+        FindIterable fi = bookingCollection.find(query, Booking.class);
         //Limit to 1
         fi.limit(1);
-        //Get the first one(the only one)
-        DBObject dbo = (DBObject) fi.first();
-        //Remove mongo's id
-        dbo.removeField("_id");
         try {
             //Try to convert into a booking and return
-            return JSONTOBooking(JSON.serialize(dbo));
+            return (Booking) fi.first();
         } catch (Exception e) {
         }
 
@@ -60,7 +56,7 @@ public class BookingServiceImpl extends UnicastRemoteObject implements BookingSe
     public boolean addBooking(Booking b) throws RemoteException {
         try {
             //Parse the object into JSON then insert ti the db
-            collection.insertOne(JSON.parse(objectToJSON(b)));
+            bookingCollection.insertOne(Document.parse(objectToJSON(b)));
             return true;
         } catch (Exception e) {
 
@@ -72,15 +68,35 @@ public class BookingServiceImpl extends UnicastRemoteObject implements BookingSe
     public boolean changeBooking(Booking b) throws RemoteException {
         try {
             //Create new query object
-            BasicDBObject query = new BasicDBObject();
+            Document query = new Document();
             //Find by id
-            query.append("id", b.getId());
+            query.append("id", b.get_Id());
             //Parse the object into JSON then try to find and replace
-            Document rs = (Document) collection.findOneAndUpdate(query, Document.parse(objectToJSON(b)));
-            return rs.get("id").equals(b.getId());
+            Document rs = (Document) bookingCollection.findOneAndUpdate(query, Document.parse(objectToJSON(b)));
+            return rs.get("id").equals(b.get_Id());
         } catch (Exception e) {
 
         }
+        return false;
+    }
+
+    @Override
+    public ArrayList<Car> getCars(String id) throws RemoteException {
+        Document query = new Document();
+        //Find by id
+        query.append("_id", id);
+        try {
+            //Set up mongo find
+            return (ArrayList<Car>) bookingCollection.find(query, Car.class).into(new ArrayList<Car>());
+        } catch (Exception e) {
+        }
+
+        return new ArrayList<>();
+    }
+
+    @Override
+    public boolean isCarAvailable(String carId, BookingTimeFrame timeFrame) throws RemoteException {
+        //TODO: Implement this!!
         return false;
     }
 
@@ -100,21 +116,5 @@ public class BookingServiceImpl extends UnicastRemoteObject implements BookingSe
         StringWriter sw = new StringWriter();
         m.marshal(o, sw);
         return sw.toString();
-    }
-
-    /**
-     * Parses JSON into a Booking class with JAXB
-     *
-     * @param json
-     * @return
-     * @throws Exception
-     */
-    private Booking JSONTOBooking(String json) throws Exception {
-        JAXBContext jc = JAXBContext.newInstance("ie.gmit.sw.model");
-        Unmarshaller um = jc.createUnmarshaller();
-        um.setProperty("eclipselink.media-type", "application/json");
-        um.setProperty("eclipselink.json.include-root", false);
-        JAXBElement<Booking> poElement2 = um.unmarshal(new StreamSource(new StringReader(json)), Booking.class);
-        return (Booking) poElement2.getValue();
     }
 }
