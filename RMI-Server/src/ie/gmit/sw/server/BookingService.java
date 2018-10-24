@@ -20,7 +20,7 @@ import java.rmi.*;
 public interface BookingService extends Remote {
     public Booking getBooking(String id) throws RemoteException;
 
-    public boolean addBooking(Person p, Car c) throws RemoteException;
+    public boolean addBooking(Booking b) throws RemoteException;
 
     public boolean changeBooking(Booking b) throws RemoteException;
 }
