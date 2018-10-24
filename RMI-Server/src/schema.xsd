@@ -1,0 +1,50 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:gmit="http://sw.gmit.ie/model/" targetNamespace="http://sw.gmit.ie/model/"
+            elementFormDefault="qualified">
+
+    <xsd:complexType name='car'>
+        <xsd:sequence>
+            <xsd:element name='reg'>
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                        <!-- https://www.mrexcel.com/forum/excel-questions/309455-regular-expressions-irish-number-plate.html -->
+                        <xsd:pattern
+                                value="[0-9]\d{2,3}(C|CE|CN|CW|D|DL|G|KE|KK|KY|L|LD|LH|LK|LM|LS|MH|MN|MO|OY|RN|SO|TN|TS|W|WD|WH|WX|WW)[1-9]\d{0,5}"/>
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name='model' type='xsd:string'/>
+            <xsd:element name='make' type='xsd:string'/>
+            <xsd:element name='color' type='xsd:string'/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name='address'>
+        <xsd:sequence>
+            <xsd:element name='name' type='xsd:string'/>
+            <xsd:element name='street' type='xsd:string'/>
+            <xsd:element name='city' type='xsd:string'/>
+            <xsd:element name='county' type='xsd:string'/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+
+    <xsd:complexType name='person'>
+        <xsd:sequence>
+            <xsd:element name="firstname" type="xsd:string"/>
+            <xsd:element name="lastname" type="xsd:string"/>
+            <xsd:element name='address' type='gmit:address'/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+
+    <xsd:complexType name="order">
+        <xsd:sequence>
+            <xsd:element name='address' type='gmit:person'/>
+            <xsd:element name='car' type='gmit:person'/>
+            <xsd:element name='bookingTimeFrom' type='xsd:dateTime'/>
+            <xsd:element name='bookingTimeTo' type='xsd:dateTime'/>
+            <xsd:element name='reservationTime' type='xsd:dateTime'/>
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>
