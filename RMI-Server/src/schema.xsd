@@ -21,7 +21,6 @@
 
     <xsd:complexType name='address'>
         <xsd:sequence>
-            <xsd:element name='name' type='xsd:string'/>
             <xsd:element name='street' type='xsd:string'/>
             <xsd:element name='city' type='xsd:string'/>
             <xsd:element name='county' type='xsd:string'/>
@@ -40,8 +39,8 @@
 
     <xsd:complexType name="bookingTimeFrame">
         <xsd:sequence>
-            <xsd:element name='bookingTimeFrom' type='xsd:dateTime'/>
-            <xsd:element name='bookingTimeTo' type='xsd:dateTime'/>
+            <xsd:element name='bookingTimeFrom' type='xsd:long'/>
+            <xsd:element name='bookingTimeTo' type='xsd:long'/>
         </xsd:sequence>
     </xsd:complexType>
 
@@ -49,8 +48,9 @@
         <xsd:sequence>
             <xsd:element name='_id' type='xsd:string'/>
             <xsd:element name='person' type='gmit:person'/>
+            <xsd:element name='car' type='gmit:car'/>
             <xsd:element name='bookingTimeFrame' type='gmit:bookingTimeFrame'/>
-            <xsd:element name='reservationTime' type='xsd:dateTime'/>
+            <xsd:element name='reservationTime' type='xsd:long'/>
         </xsd:sequence>
     </xsd:complexType>
 </xsd:schema>

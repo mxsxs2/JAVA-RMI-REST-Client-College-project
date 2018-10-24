@@ -9,5 +9,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="javax.xml.bind_2.2.12.v201410011542" level="project" />
     <orderEntry type="library" name="mongodb-driver-3.8.2" level="project" />
+    <orderEntry type="library" name="eclipselink" level="project" />
   </component>
 </module>

@@ -1,10 +1,15 @@
 package ie.gmit.sw.server;
 
+import com.mongodb.ConnectionString;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
-import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
+
+import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
+import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 /**
  * Class to handle database operations
@@ -14,8 +19,7 @@ public class MongoConnection {
     private int port = 27017;
     private String dbName = "carbooking";
     private MongoDatabase connectedDB;
-    private PojoCodecProvider pojoCodecProvider = PojoCodecProvider.builder().automatic(true).build();
-    private CodecRegistry pojoCodecRegistry = CodecRegistries.fromRegistries(MongoClient.getDefaultCodecRegistry(), CodecRegistries.fromProviders(pojoCodecProvider));
+    private CodecRegistry CodecRegistry = fromRegistries(MongoClient.getDefaultCodecRegistry(), fromProviders(PojoCodecProvider.builder().automatic(true).build()));
 
     /**
      * Creates a new connection at the default host
@@ -70,8 +74,13 @@ public class MongoConnection {
      * @throws Exception
      */
     private void Connect() throws Exception {
+        MongoClientSettings settings = MongoClientSettings.builder()
+                .codecRegistry(CodecRegistry)
+                .applyConnectionString(new ConnectionString("mongodb://" + host + ":" + port + "/" + dbName))
+                .build();
         //Connect to mongodb and get the database
-        connectedDB = new MongoClient(host, port).getDatabase(dbName).withCodecRegistry(pojoCodecRegistry);
+        connectedDB = MongoClients.create(settings).getDatabase(dbName);
+        // connectedDB = new MongoClient(host, port).getDatabase(dbName).withCodecRegistry(CodecRegistry);
     }
 
     /**

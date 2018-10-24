@@ -2,8 +2,8 @@ package ie.gmit.sw.server;
 
 import com.mongodb.client.MongoDatabase;
 
-import java.rmi.*;
-import java.rmi.registry.*;
+import java.rmi.Naming;
+import java.rmi.registry.LocateRegistry;
 
 /**
  * Sets up the RMI server and starts it
@@ -36,7 +36,7 @@ public class Server {
         LocateRegistry.createRegistry(port);
 
         //Bind to "RMIService
-        Naming.rebind("RMIService", s);
+        Naming.rebind("BookingRMIService", s);
 
         System.out.println("Server started on port:" + port);
     }
