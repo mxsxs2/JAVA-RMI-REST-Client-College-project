@@ -60,3 +60,5 @@
 
 # Editor-based Rest Client
 */.idea/httpRequests
+# Exclude maven target
+*/target
