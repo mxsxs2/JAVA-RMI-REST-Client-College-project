@@ -1,9 +1,0 @@
-ie\gmit\sw\model\Car.class
-ie\gmit\sw\JAXBDateConverter.class
-ie\gmit\sw\model\BookingTimeFrame.class
-ie\gmit\sw\model\Booking.class
-ie\gmit\sw\model\Person.class
-ie\gmit\sw\model\Address.class
-ie\gmit\sw\model\ObjectFactory.class
-ie\gmit\sw\server\RMIClient.class
-ie\gmit\sw\server\BookingService.class
