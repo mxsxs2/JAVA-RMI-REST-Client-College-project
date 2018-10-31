@@ -2,6 +2,7 @@ package ie.gmit.sw.server;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.result.UpdateResult;
 import ie.gmit.sw.model.Booking;
 import ie.gmit.sw.model.BookingTimeFrame;
@@ -35,13 +36,9 @@ public class BookingServiceImpl extends UnicastRemoteObject implements BookingSe
 
     @Override
     public Booking getBooking(String id) throws RemoteException {
-        //Create new query object
-        Document query = new Document();
-        //Find by id
-        query.append("_id", id);
         try {
             //Find the firs object
-            return (Booking) bookingCollection.find(query).first();
+            return (Booking) bookingCollection.find(Filters.eq("_id", id)).first();
         } catch (Exception e) {
         }
 
@@ -53,26 +50,53 @@ public class BookingServiceImpl extends UnicastRemoteObject implements BookingSe
         try {
             //Parse the object into JSON then insert ti the db
             bookingCollection.insertOne(b);
-            return true;
+            //Check if it was added
+            return bookingCollection.find(Filters.eq("_id", b.getId())).first() != null;
+        } catch (Exception e) {
+            //Return true if duplicate
+            return e.getMessage().contains("E11000");
+        }
+    }
+
+    @Override
+    public boolean changeBooking(Booking b) throws RemoteException {
+        try {
+            //Parse the object into JSON then try to find and replace
+            UpdateResult updateResult = bookingCollection.replaceOne(
+                    //Filter by id
+                    Filters.eq("_id", b.getId()),
+                    Document.parse(objectToJSON(b))
+            );
+            //Check if any was modified
+            return updateResult.getModifiedCount() == 1;
         } catch (Exception e) {
         }
         return false;
     }
 
     @Override
-    public boolean changeBooking(Booking b) throws RemoteException {
+    public boolean addCar(Car c) throws RemoteException {
+
         try {
-            //Create new query object
-            Document query = new Document();
-            //Find by id
-            query.append("_id", b.getId());
-            //Parse the object into JSON then try to find and replace
-            UpdateResult updateResult = bookingCollection.replaceOne(query, Document.parse(objectToJSON(b)));
-            //Check if any was modified
-            return updateResult.getModifiedCount() == 1;
+            //Insert the document
+            carCollection.insertOne(Document.parse((objectToJSON(c))));
+            //Check if it was added
+            return carCollection.find(Filters.eq("_id", c.getId())).first() != null;
+        } catch (Exception e) {
+            //Return true if duplicate
+            return e.getMessage().contains("E11000");
+        }
+    }
+
+    @Override
+    public Car getCar(String id) throws RemoteException {
+        try {
+            //Find the firs object
+            return (Car) carCollection.find(Filters.eq("_id", id)).first();
         } catch (Exception e) {
         }
-        return false;
+
+        return null;
     }
 
     @Override
@@ -99,7 +123,7 @@ public class BookingServiceImpl extends UnicastRemoteObject implements BookingSe
      * @return
      * @throws Exception
      */
-    private String objectToJSON(Booking o) throws Exception {
+    private String objectToJSON(Object o) throws Exception {
         JAXBContext jc = JAXBContext.newInstance("ie.gmit.sw.model");
         Marshaller m = jc.createMarshaller();
         m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);

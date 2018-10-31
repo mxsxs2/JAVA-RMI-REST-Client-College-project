@@ -1,20 +1,27 @@
 package ie.gmit.sw.server;
 
+import ie.gmit.sw.model.Booking;
+import ie.gmit.sw.model.BookingTimeFrame;
+import ie.gmit.sw.model.Car;
+
 import java.rmi.Naming;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import ie.gmit.sw.model.*;
-
-import static java.lang.System.out;
+import java.util.ArrayList;
 
 /**
  * Client for the RMI service
  */
-public class RMIClient {
-	public RMIClient() throws Exception{
-		BookingService s = (BookingService) Naming.lookup("rmi://127.0.0.1:1099/BookingRMIService");
+public class RMIClient implements BookingService {
+    private static final RMIClient rmic = new RMIClient();
 
+    private RMIClient() {
+    }
+
+    public static RMIClient getInstance() {
+        return rmic;
+    }
+
+    private BookingService connect() throws Exception {
+        return (BookingService) Naming.lookup("rmi://127.0.0.1:1099/BookingRMIService");/*
 		Booking b = s.getBooking("asd3");
 		out.println(b);
 		out.println(b.getId());
@@ -69,6 +76,76 @@ public class RMIClient {
 
 
 		s.getCars().forEach(System.out::println);
+*/
+    }
 
-	}
+    @Override
+    public Booking getBooking(String id) {
+        try {
+            return connect().getBooking(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean addBooking(Booking b) {
+        try {
+            return connect().addBooking(b);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean changeBooking(Booking b) {
+        try {
+            return connect().changeBooking(b);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean addCar(Car c) {
+        try {
+            return connect().addCar(c);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public Car getCar(String id) {
+        try {
+            return connect().getCar(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public ArrayList<Car> getCars() {
+        try {
+            return connect().getCars();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
+    public boolean isCarAvailable(String carId, BookingTimeFrame timeFrame) {
+        try {
+            return connect().isCarAvailable(carId, timeFrame);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
