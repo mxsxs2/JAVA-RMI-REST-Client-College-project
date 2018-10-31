@@ -105,15 +105,15 @@ public class BookingServiceImpl extends UnicastRemoteObject implements BookingSe
             //Get a list of cars from mongo
             return (ArrayList<Car>) carCollection.find(Car.class).into(new ArrayList<Car>());
         } catch (Exception e) {
+            e.printStackTrace();
         }
-
         return new ArrayList<>();
     }
 
     @Override
     public boolean isCarAvailable(String carId, BookingTimeFrame timeFrame) throws RemoteException {
         //TODO: Implement this!!
-        return false;
+        return true;
     }
 
     /**
