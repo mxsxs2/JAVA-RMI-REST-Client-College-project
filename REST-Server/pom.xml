@@ -30,7 +30,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jaxb2-maven-plugin</artifactId>
-                <version>2.3.1</version>
+                <version>2.4</version>
                 <executions>
                     <execution>
                         <id>xjc</id>
@@ -50,7 +50,6 @@
                     <xjbSources>
                         <xjbSource>src/main/resources/binding.xjb</xjbSource>
                     </xjbSources>
-                    <extension>true</extension>
                     <generateEpisode>false</generateEpisode>
                     <clearOutputDir>false</clearOutputDir>
                 </configuration>
@@ -68,11 +67,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <dependency>
-                <groupId>org.glassfish.jersey.media</groupId>
-                <artifactId>jersey-media-jaxb</artifactId>
-                <version>${jersey.version}</version>
-            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -80,6 +75,10 @@
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-servlet-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-client</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.inject</groupId>
@@ -97,7 +96,7 @@
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
-            <version>2.3.1</version>
+            <version>2.1</version>
         </dependency>
     </dependencies>
     <properties>
