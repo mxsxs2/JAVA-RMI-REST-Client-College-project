@@ -57,10 +57,10 @@
 
 # IntelliJ
 */out/
-.idea
-*.iws
-*.iml
-*.ipr
+*/.idea
+*/*.iws
+*/*.iml
+*/*.ipr
 
 # Editor-based Rest Client
 */.idea/httpRequests
