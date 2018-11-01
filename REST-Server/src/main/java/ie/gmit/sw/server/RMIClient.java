@@ -8,144 +8,131 @@ import java.rmi.Naming;
 import java.util.ArrayList;
 
 /**
- * Client for the RMI service
+ * RMI connector singleton
  */
 public class RMIClient implements BookingService {
+    //Encapsulated RMIClient instance
     private static final RMIClient rmic = new RMIClient();
 
+    /**
+     * Private constructor to block instantiation
+     */
     private RMIClient() {
     }
 
+    /**
+     * Returns the RMIClient
+     *
+     * @return
+     */
     public static RMIClient getInstance() {
         return rmic;
     }
 
+    /**
+     * Connects to the remote RMI service
+     *
+     * @return
+     * @throws Exception
+     */
     private BookingService connect() throws Exception {
-        return (BookingService) Naming.lookup("rmi://127.0.0.1:1099/BookingRMIService");/*
-		Booking b = s.getBooking("asd3");
-		out.println(b);
-		out.println(b.getId());
-		out.println(b.getPerson().getId());
-		out.println(b.getCar().getId());
-
-
-		Address a= new Address();
-		a.setCity("Galway");
-		a.setCounty("Galway");
-		a.setStreet("my street");
-
-		Person p = new Person();
-		p.setId("pasd");
-		p.setFirstname("firstname");
-		p.setLastname("lastname");
-		p.setAddress(a);
-
-
-
-		Car c= new Car();
-		c.setId("181-D-7589");
-		c.setColor("Black");
-		c.setMake("A8");
-		c.setModel("Audi");
-
-		BookingTimeFrame bt= new BookingTimeFrame();
-		bt.setBookingTimeFrom(new Date().getTime());
-		bt.setBookingTimeTo(new Date().getTime());
-
-
-		Booking nb =new Booking();
-		nb.setId("asd4");
-		nb.setPerson(p);
-		nb.setCar(c);
-		nb.setBookingTimeFrame(bt);
-		nb.setReservationTime(new Date().getTime());
-		out.println(s.addBooking(nb));
-
-
-		BookingTimeFrame bt2= new BookingTimeFrame();
-		bt2.setBookingTimeFrom(new SimpleDateFormat("yyy-MM-dd").parse("2018-10-25").getTime());
-		bt2.setBookingTimeTo(new SimpleDateFormat("yyy-MM-dd").parse("2018-10-30").getTime());
-
-		Booking nb2 =new Booking();
-		nb2.setId("asd4");
-		nb2.setPerson(p);
-		nb2.setCar(c);
-		nb2.setBookingTimeFrame(bt2);
-		nb2.setReservationTime(new Date().getTime());
-		out.println(s.changeBooking(nb2));
-
-
-		s.getCars().forEach(System.out::println);
-*/
+        return (BookingService) Naming.lookup("rmi://127.0.0.1:1099/BookingRMIService");
     }
 
-    @Override
-    public Booking getBooking(String id) {
+    /**
+     * Invokes a method without parameters
+     *
+     * @param method
+     * @return
+     */
+    private Object invokeNull(String method) {
         try {
-            return connect().getBooking(id);
+            return BookingService.class.getDeclaredMethod(method).invoke(connect());
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * Invokes a method with one parameter
+     *
+     * @param method
+     * @param a
+     * @return
+     */
+    private Object invokeOne(String method, Object a) {
+        try {
+            return BookingService.class.getDeclaredMethod(method, a.getClass()).invoke(connect(), a);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Invokes a method with two parameters
+     *
+     * @param method
+     * @param a
+     * @param b
+     * @return
+     */
+    private Object invokeTwo(String method, Object a, Object b) {
+        try {
+            return BookingService.class.getDeclaredMethod(method, a.getClass(), b.getClass()).invoke(connect(), a, b);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    @Override
+    public Booking getBooking(String id) {
+        return (Booking) invokeOne("getBooking", id);
     }
 
     @Override
     public boolean addBooking(Booking b) {
-        try {
-            return connect().addBooking(b);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
+        return (Boolean) invokeOne("addBooking", b);
     }
 
     @Override
     public boolean changeBooking(Booking b) {
-        try {
-            return connect().changeBooking(b);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
+        return (Boolean) invokeOne("changeBooking", b);
+    }
+
+    @Override
+    public ArrayList<Booking> getBookings() {
+        ArrayList<Booking> a = (ArrayList<Booking>) invokeNull("getBookings");
+        if (a == null)
+            a = new ArrayList<>();
+
+        return a;
     }
 
     @Override
     public boolean addCar(Car c) {
-        try {
-            return connect().addCar(c);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
+        return (Boolean) invokeOne("addCar", c);
     }
 
     @Override
     public Car getCar(String id) {
-        try {
-            return connect().getCar(id);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        return (Car) invokeOne("getCar", id);
     }
 
     @Override
     public ArrayList<Car> getCars() {
-        try {
-            return connect().getCars();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return new ArrayList<>();
+        ArrayList<Car> a = (ArrayList<Car>) invokeNull("getCars");
+        if (a == null)
+            a = new ArrayList<>();
+
+        return a;
     }
 
     @Override
     public boolean isCarAvailable(String carId, BookingTimeFrame timeFrame) {
-        try {
-            return connect().isCarAvailable(carId, timeFrame);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
+        return (Boolean) invokeTwo("isCarAvailable", carId, timeFrame);
     }
 }

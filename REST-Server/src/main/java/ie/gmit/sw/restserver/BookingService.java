@@ -30,7 +30,6 @@ public class BookingService {
         if (c.getId() == null || c.getCar() == null || c.getBookingTimeFrame() == null || c.getPerson() == null) {
             return Response.status(400).build();
         }
-        System.out.println(c.getBookingTimeFrame().getBookingTimeFrom());
         if (RMIClient.getInstance().addBooking(c)) {
             return Response.status(200).entity(c).build();
         }

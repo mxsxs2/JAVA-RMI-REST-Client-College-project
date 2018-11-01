@@ -76,6 +76,17 @@ public class BookingServiceImpl extends UnicastRemoteObject implements BookingSe
     }
 
     @Override
+    public ArrayList<Booking> getBookings() throws RemoteException {
+        try {
+            //Get a list of cars from mongo
+            return (ArrayList<Booking>) bookingCollection.find(Booking.class).into(new ArrayList<Booking>());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
     public boolean addCar(Car c) throws RemoteException {
 
         try {
