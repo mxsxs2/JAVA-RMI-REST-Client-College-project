@@ -8,6 +8,7 @@ import ie.gmit.sw.model.Booking;
 import ie.gmit.sw.model.BookingTimeFrame;
 import ie.gmit.sw.model.Car;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -112,8 +113,13 @@ public class BookingServiceImpl extends UnicastRemoteObject implements BookingSe
 
     @Override
     public boolean isCarAvailable(String carId, BookingTimeFrame timeFrame) throws RemoteException {
-        //TODO: Implement this!!
-        return true;
+        //Check if a car with the given id at the given date range is available
+        Bson f2 = Filters.and(
+                Filters.eq("car._id", carId),
+                Filters.lte("bookingTimeFrame.bookingTimeFrom", timeFrame.getBookingTimeTo()),
+                Filters.gte("bookingTimeFrame.bookingTimeTo", timeFrame.getBookingTimeFrom())
+        );
+        return bookingCollection.find(f2).first() == null;
     }
 
     /**
