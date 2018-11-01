@@ -57,8 +57,23 @@
 
 # IntelliJ
 */out/
+.idea
+*.iws
+*.iml
+*.ipr
 
 # Editor-based Rest Client
 */.idea/httpRequests
 # Exclude maven target
 */target
+
+### STS ###
+*/.apt_generated
+*/.classpath
+*/.factorypath
+*/.project
+*/.settings
+*/.springBeans
+*/.sts4-cache
+
+!.mvn/wrapper/maven-wrapper.jar
