@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+    <title th:text="${title}"></title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" th:fragment="menu(current)">
+    <a class="navbar-brand" href="/#">Booking manager</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item" th:classappend="${current == 'home'} ? 'active'">
+                <a class="nav-link" th:href="@{/}">Home</a>
+            </li>
+            <li class="nav-item" th:classappend="${current == 'booking/new'} ? 'active'">
+                <a class="nav-link" th:href="@{/booking/new}">Create Booking</a>
+            </li>
+            <li class="nav-item" th:classappend="${current == 'booking/view'} ? 'active'">
+                <a class="nav-link" th:href="@{/booking/view}">View Booking</a>
+            </li>
+            <li class="nav-item"th:classappend="${current == 'booking/modify'} ? 'active'">
+                <a class="nav-link" th:href="@{/booking/modify}">Modify Booking</a>
+            </li>
+            <li class="nav-item"th:classappend="${current == 'booking/dekete'} ? 'active'">
+                <a class="nav-link" th:href="@{/booking/delete}">Delete Booking</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+</div>
+</body>
+</html>
