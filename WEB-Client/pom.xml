@@ -68,7 +68,6 @@
             <artifactId>jaxb2-basics</artifactId>
             <version>1.11.1</version>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -114,12 +113,23 @@
                     <args>
                         <arg>-XtoString</arg>
                         <arg>-Xsetters</arg>
+                        <arg>-Xannotate</arg>
                     </args>
                     <plugins>
                         <plugin>
                             <groupId>org.jvnet.jaxb2_commons</groupId>
                             <artifactId>jaxb2-basics</artifactId>
                             <version>1.11.1</version>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.jvnet.jaxb2_commons</groupId>
+                            <artifactId>jaxb2-basics-annotate</artifactId>
+                            <version>1.1.0</version>cls
+                        </plugin>
+                        <plugin>
+                                <groupId>javax.validation</groupId>
+                                <artifactId>validation-api</artifactId>
+                                <version>2.0.1.Final</version>
                         </plugin>
                     </plugins>
                 </configuration>

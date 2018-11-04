@@ -1,6 +1,10 @@
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             targetNamespace="http://sw.gmit.ie/model/"
             xmlns:gmit="http://sw.gmit.ie/model/"
+            xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+            jaxb:version="2.1"
+            xmlns:annox="http://annox.dev.java.net"
+            jaxb:extensionBindingPrefixes="annox"
             elementFormDefault="unqualified">
 
     <xsd:element name="car">
@@ -33,9 +37,51 @@
     <xsd:element name='address'>
         <xsd:complexType>
             <xsd:sequence>
-                <xsd:element name='street' type='xsd:string'/>
-                <xsd:element name='city' type='xsd:string'/>
-                <xsd:element name='county' type='xsd:string'/>
+                <xsd:element name='street'>
+                    <xsd:annotation>
+                        <xsd:appinfo>
+                            <annox:annotate target="field">@javax.validation.constraints.Min(value=3, message="Should be minimum 5 characters")</annox:annotate>
+                            <annox:annotate target="field">@javax.validation.constraints.NotNull</annox:annotate>
+                            <annox:annotate target="field">@javax.validation.constraints.Pattern(regexp="^[a-zA-Z0-9_., ]*$")</annox:annotate>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:string">
+                            <xsd:minLength value="10"/>
+                            <xsd:pattern value="^[a-zA-Z0-9_., ]*$"/>
+                        </xsd:restriction>
+                    </xsd:simpleType>
+                </xsd:element>
+                <xsd:element name='city'>
+                    <xsd:annotation>
+                        <xsd:appinfo>
+                            <annox:annotate target="field">@javax.validation.constraints.Min(value=3, message="Should be minimum 5 characters")</annox:annotate>
+                            <annox:annotate target="field">@javax.validation.constraints.NotNull</annox:annotate>
+                            <annox:annotate target="field">@javax.validation.constraints.Pattern(regexp="^[a-zA-Z0-9_., ]*$")</annox:annotate>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:string">
+                            <xsd:minLength value="10"/>
+                            <xsd:pattern value="^[a-zA-Z0-9_., ]*$"/>
+                        </xsd:restriction>
+                    </xsd:simpleType>
+                </xsd:element>
+                <xsd:element name='county'>
+                    <xsd:annotation>
+                        <xsd:appinfo>
+                            <annox:annotate target="field">@javax.validation.constraints.Min(value=3, message="Should be minimum 5 characters")</annox:annotate>
+                            <annox:annotate target="field">@javax.validation.constraints.NotNull</annox:annotate>
+                            <annox:annotate target="field">@javax.validation.constraints.Pattern(regexp="^[a-zA-Z0-9_., ]*$")</annox:annotate>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:string">
+                            <xsd:minLength value="10"/>
+                            <xsd:pattern value="^[a-zA-Z0-9_., ]*$"/>
+                        </xsd:restriction>
+                    </xsd:simpleType>
+                </xsd:element>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
@@ -45,9 +91,43 @@
         <xsd:complexType>
             <xsd:sequence>
                 <xsd:element name='id' type='xsd:string'/>
-                <xsd:element name="firstname" type="xsd:string"/>
-                <xsd:element name="lastname" type="xsd:string"/>
-                <xsd:element ref='gmit:address'/>
+                <xsd:element name="firstname">
+                    <xsd:annotation>
+                        <xsd:appinfo>
+                            <annox:annotate target="field">@javax.validation.constraints.Min(value=3, message="Should be minimum 5 characters")</annox:annotate>
+                            <annox:annotate target="field">@javax.validation.constraints.NotNull</annox:annotate>
+                            <annox:annotate target="field">@javax.validation.constraints.Pattern(regexp="^[a-zA-Z0-9_., ]*$")</annox:annotate>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:string">
+                            <xsd:minLength value="10"/>
+                            <xsd:pattern value="^[a-zA-Z0-9_., ]*$"/>
+                        </xsd:restriction>
+                    </xsd:simpleType>
+                </xsd:element>
+                <xsd:element name="lastname">
+                    <xsd:annotation>
+                        <xsd:appinfo>
+                            <annox:annotate target="field">@javax.validation.constraints.Min(value=3, message="Should be minimum 5 characters")</annox:annotate>
+                            <annox:annotate target="field">@javax.validation.constraints.NotNull</annox:annotate>
+                            <annox:annotate target="field">@javax.validation.constraints.Pattern(regexp="^[a-zA-Z0-9_., ]*$")</annox:annotate>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:string">
+                            <xsd:minLength value="10"/>
+                            <xsd:pattern value="^[a-zA-Z0-9_., ]*$"/>
+                        </xsd:restriction>
+                    </xsd:simpleType>
+                </xsd:element>
+                <xsd:element ref='gmit:address'>
+                    <xsd:annotation>
+                        <xsd:appinfo>
+                            <annox:annotate target="field">@javax.validation.Valid</annox:annotate>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                </xsd:element>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
@@ -55,8 +135,32 @@
     <xsd:element name="bookingTimeFrame">
         <xsd:complexType>
             <xsd:sequence>
-                <xsd:element name='bookingTimeFrom' type='xsd:long'/>
-                <xsd:element name='bookingTimeTo' type='xsd:long'/>
+                <xsd:element name='bookingTimeFrom'>
+                    <xsd:annotation>
+                        <xsd:appinfo>
+                            <annox:annotate target="field">@javax.validation.constraints.Min(value=1541293080000, message="Should be in future")</annox:annotate>
+                            <annox:annotate target="field">@javax.validation.constraints.NotNull</annox:annotate>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:long">
+                            <xsd:minInclusive value="1541293080000"/>
+                        </xsd:restriction>
+                    </xsd:simpleType>
+                </xsd:element>
+                <xsd:element name='bookingTimeTo'>
+                    <xsd:annotation>
+                        <xsd:appinfo>
+                            <annox:annotate target="field">@javax.validation.constraints.Min(value=1541293080000, message="Should be in future")</annox:annotate>
+                            <annox:annotate target="field">@javax.validation.constraints.NotNull</annox:annotate>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:long">
+                            <xsd:minInclusive value="1541293080000"/>
+                        </xsd:restriction>
+                    </xsd:simpleType>
+                </xsd:element>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
@@ -65,10 +169,34 @@
         <xsd:complexType>
             <xsd:sequence>
                 <xsd:element name='id' type='xsd:string'/>
-                <xsd:element ref='gmit:person'/>
+                <xsd:element ref='gmit:person'>
+                    <xsd:annotation>
+                        <xsd:appinfo>
+                            <annox:annotate target="field">@javax.validation.Valid</annox:annotate>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                </xsd:element>
                 <xsd:element ref='gmit:car'/>
-                <xsd:element ref='gmit:bookingTimeFrame'/>
-                <xsd:element name='reservationTime' type='xsd:long'/>
+                <xsd:element ref='gmit:bookingTimeFrame'>
+                    <xsd:annotation>
+                        <xsd:appinfo>
+                            <annox:annotate target="field">@javax.validation.Valid</annox:annotate>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name='reservationTime'>
+                    <xsd:annotation>
+                        <xsd:appinfo>
+                            <annox:annotate target="field">@javax.validation.constraints.Min(value=1541293080000, message="Should be in future")</annox:annotate>
+                            <annox:annotate target="field">@javax.validation.constraints.NotNull</annox:annotate>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:long">
+                            <xsd:minInclusive value="1541293080000"/>
+                        </xsd:restriction>
+                    </xsd:simpleType>
+                </xsd:element>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
