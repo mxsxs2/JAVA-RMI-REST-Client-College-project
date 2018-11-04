@@ -9,6 +9,7 @@
         <p class="card-text">
         <h2 th:if="${couldnotsave}" class="error">Could not save this time. Please try again later</h2>
         <form action="/booking/new" th:action="@{/booking/new}" th:object="${booking}" method="post">
+
             <div class="form-group">
                 <label htmlFor="fn">First Name</label>
                 <input type="text" id="fn" class="form-control" th:field="*{person.firstname}"/>
@@ -62,8 +63,9 @@
                       th:errors="*{bookingTimeFrame.bookingTimeTo}"></span>
             </div>
             <div class="form-group">
-                <input type="hidden" name="modify" th:if="${modify!=null}" th:value="${modify}">
+                <input type="hidden" name="modify" th:value="${modify!=null}">
                 <input type="hidden" id="id" class="form-control" th:field="*{id}"/>
+                <input type="hidden" id="pid" class="form-control" th:field="*{person.id}"/>
                 <div>
                     <input type="submit" value="Submit" class="btn btn-dark"/>
                     <input type="reset" value="Reset" class="btn btn-dark"/>

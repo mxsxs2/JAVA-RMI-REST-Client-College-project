@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,11 +30,14 @@ public class BookingController {
     @GetMapping("/new")
     public String welcome(ModelMap model) {
         BookingTimeFrame btf = new BookingTimeFrame();
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
-        c.add(Calendar.DATE, 2);
-        btf.setBookingTimeFrom(new Date().getTime());
-        btf.setBookingTimeTo(c.getTime().getTime());
+        Calendar c1 = Calendar.getInstance();
+        c1.setTime(new Date());
+        c1.add(Calendar.DATE, 1);
+        Calendar c2 = Calendar.getInstance();
+        c2.setTime(new Date());
+        c2.add(Calendar.DATE, 2);
+        btf.setBookingTimeFrom(c1.getTime().getTime());
+        btf.setBookingTimeTo(c2.getTime().getTime());
 
         Booking b = new Booking();
         b.setBookingTimeFrame(btf);
@@ -47,7 +49,7 @@ public class BookingController {
     }
 
     @PostMapping("/new")
-    public String welcome(@Valid @ModelAttribute("booking") Booking booking, @RequestBody MultiValueMap<String, String> formData, BindingResult bindingResult, ModelMap model) {
+    public String welcome(@Valid @ModelAttribute("booking") Booking booking, @RequestParam("modify") String modify, BindingResult bindingResult, ModelMap model) {
         model.put("message", "Create ");
         model.put("cars", carDAO.getCars());
         Long now = new Date().getTime();
@@ -61,18 +63,21 @@ public class BookingController {
 
         booking.setReservationTime(now);
 
+        if (modify != null && modify.equals("true")) {
+            model.put("message", "Modify ");
+            model.put("modify", true);
+        }
+
         if (bindingResult.hasErrors()) {
-            bindingResult.getAllErrors().forEach(e -> {
+            /*bindingResult.getAllErrors().forEach(e -> {
                 System.out.println(e.getDefaultMessage());
                 System.out.println(e.toString());
-            });
-            System.out.println("errors");
+            });*/
+
             return "booking/new";
         } else {
             Booking b;
-            if (formData.getFirst("modify") != null) {
-                model.put("message", "Modify ");
-                model.put("modify", true);
+            if (modify != null && modify.equals("true")) {
                 b = bookingDAO.change(booking);
             } else {
                 b = bookingDAO.save(booking);
@@ -119,6 +124,13 @@ public class BookingController {
             model.put("message", "Find ");
             return "booking/view";
         }
+    }
+
+    @GetMapping("/modify")
+    public String modify(ModelMap model) {
+        model.put("message", "Modify ");
+        model.put("modify", true);
+        return "forward:/booking/view";
     }
 
     @RequestMapping("/delete")
