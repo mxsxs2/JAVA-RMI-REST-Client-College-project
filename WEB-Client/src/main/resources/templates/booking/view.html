@@ -6,60 +6,68 @@
 <div class="card" style="width: 18rem;">
     <div class="card-body">
         <h5 class="card-title" th:text="${message}+'Booking'"></h5>
-        <p class="card-text" th:if="${booking==null}">
-        <h1 th:if="${notfound}" th:text="${'Could not find booking '+notfound}"></h1>
-        </p>
-        <p class="card-text" th:if="${booking!=null && booking.id!=null}">
-        <div class="booking-view">
+        <div class="card-text" th:if="${booking==null}">
+            <h2 th:if="${notfound}" th:text="${'Could not find booking '+notfound}" class="error"></h2>
+            <div class="form-group">
+                <label htmlFor="bid">Booking number</label>
+                <input type="text" id="bid" class="form-control"/>
+            </div>
+            <div>
+                <button class="btn btn-dark"
+                        onClick="location.href='/booking/view/'+document.getElementById('bid').value">
+                    Find
+                </button>
+            </div>
+        </div>
+        <div class="card-text booking-view" th:if="${booking!=null && booking.id!=null}" th:object="${booking}">
             <div>
                 <label>Booking ID</label><br/>
-                <span th:text="${booking.id}"></span>
+                <span th:text="*{id}"></span>
             </div>
             <div>
                 <label>First Name</label><br/>
-                <span th:text="${booking.person.firstname}"></span>
+                <span th:text="*{person?.firstname}"></span>
             </div>
             <div>
                 <label>Last Name</label><br/>
-                <span th:text="${booking.person.lastname}"></span>
+                <span th:text="*{person?.lastname}"></span>
             </div>
             <div>
                 <label>Street</label><br/>
-                <span th:text="${booking.person.address.street}"></span>
+                <span th:text="*{person?.address?.street}"></span>
             </div>
             <div>
                 <label>City</label><br/>
-                <span th:text="${booking.person.address.city}"></span>
+                <span th:text="*{person?.address?.city}"></span>
             </div>
             <div>
                 <label>County</label><br/>
-                <span th:text="${booking.person.address.county}"></span>
+                <span th:text="*{person?.address?.county}"></span>
             </div>
             <div>
                 <label>Car</label>
                 <div>
                     <label>Make</label><br/>
-                    <span th:text="${booking.car.make}"></span>
+                    <span th:text="*{car?.make}"></span>
                 </div>
                 <div>
                     <label>Mode;</label><br/>
-                    <span th:text="${booking.car.model}"></span>
+                    <span th:text="*{car?.model}"></span>
                 </div>
                 <div>
                     <label>Color</label><br/>
-                    <span th:text="${booking.car.color}"></span>
+                    <span th:text="*{car?.color}"></span>
                 </div>
             </div>
             <div>
                 <label>Collect car at</label><br/>
-                <span th:text="${booking.bookingTimeFrame.bookingTimeFrom}"></span>
+                <span th:text="*{bookingTimeFrame?.bookingTimeFrom}"></span>
             </div>
             <div>
                 <label>Return car at</label><br/>
-                <span th:text="${booking.bookingTimeFrame.bookingTimeTo}"></span>
+                <span th:text="*{bookingTimeFrame?.bookingTimeTo}"></span>
             </div>
         </div>
-        </p>
     </div>
 </div>
 </body>
