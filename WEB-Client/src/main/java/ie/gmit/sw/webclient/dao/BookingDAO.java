@@ -36,4 +36,20 @@ public class BookingDAO extends DAO<Booking> {
         return null;
     }
 
+    /**
+     * Change a booking
+     *
+     * @param o
+     * @return
+     */
+    public Booking change(Booking o) {
+        try {
+            Object obj = super.restUtils.restRequest(restCarPath + "/change", o, HttpMethod.PUT);
+            return (Booking) obj;
+        } catch (HttpClientErrorException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
 }

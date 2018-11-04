@@ -45,7 +45,7 @@ public class BookingService {
     @Consumes(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Path("change")
     public Response changeBooking(Booking c) {
-        if (c.getId() == null || c.getCar() == null || c.getBookingTimeFrame() == null || c.getPerson() == null) {
+        if (c.getCar() == null || c.getBookingTimeFrame() == null || c.getPerson() == null) {
             return Response.status(400).build();
         }
         if (RMIClient.getInstance().changeBooking(c)) {

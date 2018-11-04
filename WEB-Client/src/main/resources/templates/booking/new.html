@@ -7,67 +7,72 @@
     <div class="card-body">
         <h5 class="card-title" th:text="${message}+'Booking'"></h5>
         <p class="card-text">
-            <form action="#" th:action="@{/booking/new}" th:object="${booking}" method="post">
-                <div class="form-group">
-                    <label htmlFor="fn">First Name</label>
-                    <input type="text" id="fn" class="form-control" th:field="*{person.firstname}"/>
-                    <span class="error" th:if="${#fields.hasErrors('person.firstname')}"
-                          th:errors="*{person.firstname}"></span>
-                </div>
-                <div class="form-group">
-                    <label htmlFor="ln">Last Name</label>
-                    <input type="text" id="ln" class="form-control" th:field="*{person.lastname}"/>
-                    <span class="error" th:if="${#fields.hasErrors('person.lastname')}"
-                          th:errors="*{person.lastname}"></span>
-                </div>
-                <div class="form-group">
-                    <label htmlFor="street">Street</label>
-                    <input type="text" id="street" class="form-control" th:field="*{person.address.street}"/>
-                    <span class="error" th:if="${#fields.hasErrors('person.address.street')}"
-                          th:errors="*{person.address.street}"></span>
-                </div>
-                <div class="form-group">
-                    <label htmlFor="city">City</label>
-                    <input type="text" id="city" class="form-control" th:field="*{person.address.city}"/>
-                    <span class="error" th:if="${#fields.hasErrors('person.address.city')}"
-                          th:errors="*{person.address.city}"></span>
-                </div>
-                <div class="form-group">
-                    <label htmlFor="country">County</label>
-                    <input type="text" id="country" class="form-control" th:field="*{person.address.county}"/>
-                    <span class="error" th:if="${#fields.hasErrors('person.address.county')}"
-                          th:errors="*{person.address.county}"></span>
-                </div>
-                <div class="form-group">
-                    <label htmlFor="country">Car</label>
-                    <select class="form-control" th:field="*{car}" id="car">
-                        <option th:each="c : ${cars}" th:value="${c.id}"
-                                th:text="${c.make}+' '+${c.model}+' '+${c.color}"
-                                th:selected="${car!=null && c.id.equals(car.getId())}">
+        <h2 th:if="${couldnotsave}" class="error">Could not save this time. Please try again later</h2>
+        <form action="/booking/new" th:action="@{/booking/new}" th:object="${booking}" method="post">
+            <div class="form-group">
+                <label htmlFor="fn">First Name</label>
+                <input type="text" id="fn" class="form-control" th:field="*{person.firstname}"/>
+                <span class="error" th:if="${#fields.hasErrors('person.firstname')}"
+                      th:errors="*{person.firstname}"></span>
+            </div>
+            <div class="form-group">
+                <label htmlFor="ln">Last Name</label>
+                <input type="text" id="ln" class="form-control" th:field="*{person.lastname}"/>
+                <span class="error" th:if="${#fields.hasErrors('person.lastname')}"
+                      th:errors="*{person.lastname}"></span>
+            </div>
+            <div class="form-group">
+                <label htmlFor="street">Street</label>
+                <input type="text" id="street" class="form-control" th:field="*{person.address.street}"/>
+                <span class="error" th:if="${#fields.hasErrors('person.address.street')}"
+                      th:errors="*{person.address.street}"></span>
+            </div>
+            <div class="form-group">
+                <label htmlFor="city">City</label>
+                <input type="text" id="city" class="form-control" th:field="*{person.address.city}"/>
+                <span class="error" th:if="${#fields.hasErrors('person.address.city')}"
+                      th:errors="*{person.address.city}"></span>
+            </div>
+            <div class="form-group">
+                <label htmlFor="country">County</label>
+                <input type="text" id="country" class="form-control" th:field="*{person.address.county}"/>
+                <span class="error" th:if="${#fields.hasErrors('person.address.county')}"
+                      th:errors="*{person.address.county}"></span>
+            </div>
+            <div class="form-group">
+                <label htmlFor="country">Car</label>
+                <select class="form-control" th:field="*{car}" id="car">
+                    <option th:each="c : ${cars}" th:value="${c.id}"
+                            th:text="${c.make}+' '+${c.model}+' '+${c.color}"
+                            th:selected="${car!=null && c.id.equals(car.getId())}">
 
-                        </option>
-                    </select>
+                    </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label htmlFor="from">Collect car at</label>
+                <input type="text" id="from" class="form-control" th:field="*{bookingTimeFrame.bookingTimeFrom}"/>
+                <span class="error" th:if="${#fields.hasErrors('bookingTimeFrame.bookingTimeFrom')}"
+                      th:errors="*{bookingTimeFrame.bookingTimeFrom}"></span>
+            </div>
+            <div class="form-group">
+                <label htmlFor="to">Return car at</label>
+                <input type="text" id="to" class="form-control" th:field="*{bookingTimeFrame.bookingTimeTo}"/>
+                <span class="error" th:if="${#fields.hasErrors('bookingTimeFrame.bookingTimeTo')}"
+                      th:errors="*{bookingTimeFrame.bookingTimeTo}"></span>
+            </div>
+            <div class="form-group">
+                <input type="hidden" name="modify" th:if="${modify!=null}" th:value="${modify}">
+                <input type="hidden" id="id" class="form-control" th:field="*{id}"/>
+                <div>
+                    <input type="submit" value="Submit" class="btn btn-dark"/>
+                    <input type="reset" value="Reset" class="btn btn-dark"/>
                 </div>
-                <div class="form-group">
-                    <label htmlFor="from">Collect car at</label>
-                    <input type="text" id="from" class="form-control" th:field="*{bookingTimeFrame.bookingTimeFrom}"/>
-                    <span class="error" th:if="${#fields.hasErrors('bookingTimeFrame.bookingTimeFrom')}"
-                          th:errors="*{bookingTimeFrame.bookingTimeFrom}"></span>
-                </div>
-                <div class="form-group">
-                    <label htmlFor="to">Return car at</label>
-                    <input type="text" id="to" class="form-control" th:field="*{bookingTimeFrame.bookingTimeTo}"/>
-                    <span class="error" th:if="${#fields.hasErrors('bookingTimeFrame.bookingTimeTo')}"
-                          th:errors="*{bookingTimeFrame.bookingTimeTo}"></span>
-                </div>
-                <div class="form-group">
-        <p><input type="submit" value="Submit" class="btn btn-dark"/>
-            <input type="reset" value="Reset" class="btn btn-dark"/></p>
+            </div>
+        </form>
+
+        </p>
     </div>
-    </form>
-
-    </p>
-</div>
 </div>
 </body>
 </html>

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,7 +47,7 @@ public class BookingController {
     }
 
     @PostMapping("/new")
-    public String welcome(@Valid @ModelAttribute("booking") Booking booking, BindingResult bindingResult, ModelMap model) {
+    public String welcome(@Valid @ModelAttribute("booking") Booking booking, @RequestBody MultiValueMap<String, String> formData, BindingResult bindingResult, ModelMap model) {
         model.put("message", "Create ");
         model.put("cars", carDAO.getCars());
         Long now = new Date().getTime();
@@ -68,7 +69,15 @@ public class BookingController {
             System.out.println("errors");
             return "booking/new";
         } else {
-            Booking b = bookingDAO.save(booking);
+            Booking b;
+            if (formData.getFirst("modify") != null) {
+                model.put("message", "Modify ");
+                model.put("modify", true);
+                b = bookingDAO.change(booking);
+            } else {
+                b = bookingDAO.save(booking);
+            }
+
             if (b != null) {
                 return "redirect:/booking/view/" + b.getId();
             } else {
@@ -90,16 +99,26 @@ public class BookingController {
         return "booking/view";
     }
 
-    @RequestMapping("/view")
+    @GetMapping("/view")
     public String view(ModelMap model) {
-        model.put("message", "");
+        model.put("message", "Find ");
         return "booking/view";
     }
 
-    @RequestMapping("/modify")
-    public String modify(ModelMap model) {
-        model.put("message", "Modify ");
-        return "booking/modify";
+    @GetMapping("/modify/{id}")
+    public String modify(@PathVariable("id") String id, ModelMap model) {
+        Booking b = bookingDAO.forId(id);
+        if (b != null) {
+            model.put("message", "Modify ");
+            model.put("booking", b);
+            model.put("modify", true);
+            model.put("cars", carDAO.getCars());
+            return "booking/new";
+        } else {
+            model.put("notfound", id);
+            model.put("message", "Find ");
+            return "booking/view";
+        }
     }
 
     @RequestMapping("/delete")

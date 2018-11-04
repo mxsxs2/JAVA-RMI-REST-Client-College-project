@@ -95,6 +95,7 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <cleanPackageDirectories>false</cleanPackageDirectories>
                     <schemaDirectory>src/main/resources</schemaDirectory>
                     <schemaIncludes>
                         <include>*.xsd</include>
@@ -103,8 +104,6 @@
                     <bindingIncludes>
                         <include>**/*.xjb</include>
                     </bindingIncludes>
-                    <!--<generateDirectory>src/main/java/</generateDirectory>
-                    <generatePackage>ie.gmit.sw.model</generatePackage>-->
                     <extension>true</extension>
                     <args>
                         <arg>-XtoString</arg>
@@ -129,6 +128,30 @@
                         </plugin>
                     </plugins>
                 </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/generated-sources/xjc/ie/gmit/sw/model</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>/src/main/resources/</directory>
+                                    <includes>
+                                        <include>jaxb.properties</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

@@ -13,7 +13,7 @@
                 <input type="text" id="bid" class="form-control"/>
             </div>
             <div>
-                <button class="btn btn-dark"
+                <button class="btn btn-dark btn-block"
                         onClick="location.href='/booking/view/'+document.getElementById('bid').value">
                     Find
                 </button>
@@ -66,6 +66,12 @@
             <div>
                 <label>Return car at</label><br/>
                 <span th:text="*{bookingTimeFrame?.bookingTimeTo}"></span>
+            </div>
+            <div>
+                <button class="btn btn-dark btn-block" th:data-id="${booking?.id}"
+                        onClick="location.href='/booking/modify/'+this.dataset.id">
+                    Change
+                </button>
             </div>
         </div>
     </div>
