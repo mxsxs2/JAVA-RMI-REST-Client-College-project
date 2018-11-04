@@ -127,9 +127,9 @@
                             <version>1.1.0</version>cls
                         </plugin>
                         <plugin>
-                                <groupId>javax.validation</groupId>
-                                <artifactId>validation-api</artifactId>
-                                <version>2.0.1.Final</version>
+                            <groupId>javax.validation</groupId>
+                            <artifactId>validation-api</artifactId>
+                            <version>2.0.1.Final</version>
                         </plugin>
                     </plugins>
                 </configuration>
@@ -141,6 +141,4 @@
 
         </plugins>
     </build>
-
-
 </project>
