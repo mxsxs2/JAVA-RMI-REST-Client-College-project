@@ -2,16 +2,14 @@ package ie.gmit.sw.webclient.controllers;
 
 import ie.gmit.sw.model.Booking;
 import ie.gmit.sw.model.BookingTimeFrame;
+import ie.gmit.sw.webclient.dao.BookingDAO;
 import ie.gmit.sw.webclient.dao.CarDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Calendar;
@@ -26,6 +24,8 @@ public class BookingController {
 
     @Autowired
     private CarDAO carDAO;
+    @Autowired
+    private BookingDAO bookingDAO;
 
     @GetMapping("/new")
     public String welcome(ModelMap model) {
@@ -58,14 +58,36 @@ public class BookingController {
         if (booking.getBookingTimeFrame().getBookingTimeTo() <= booking.getBookingTimeFrame().getBookingTimeFrom())
             bindingResult.rejectValue("bookingTimeFrame.bookingTimeTo", "time.inpast", "Should be after collection date");
 
+        booking.setReservationTime(now);
 
         if (bindingResult.hasErrors()) {
+            bindingResult.getAllErrors().forEach(e -> {
+                System.out.println(e.getDefaultMessage());
+                System.out.println(e.toString());
+            });
             System.out.println("errors");
             return "booking/new";
         } else {
-
-            return "booking/new";
+            Booking b = bookingDAO.save(booking);
+            if (b != null) {
+                return "redirect:/booking/view/" + b.getId();
+            } else {
+                model.put("couldnotsave", true);
+                return "booking/new";
+            }
         }
+    }
+
+    @GetMapping("/view/{id}")
+    public String view(@PathVariable("id") String id, ModelMap model) {
+        Booking b = bookingDAO.forId(id);
+        if (b != null) {
+            model.put("booking", b);
+        } else {
+            model.put("notfound", id);
+        }
+        model.put("message", "");
+        return "booking/view";
     }
 
     @RequestMapping("/view")

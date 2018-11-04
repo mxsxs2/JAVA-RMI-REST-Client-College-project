@@ -2,11 +2,64 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:include="fragments/header :: head(title='WEB-Client New Booking')"></head>
 <body>
-<div th:replace="fragments/header :: menu('booking/view')" ></div>
+<div th:replace="fragments/header :: menu('booking/view')"></div>
 <div class="card" style="width: 18rem;">
     <div class="card-body">
         <h5 class="card-title" th:text="${message}+'Booking'"></h5>
-        <p class="card-text"></p>
+        <p class="card-text" th:if="${booking==null}">
+        <h1 th:if="${notfound}" th:text="${'Could not find booking '+notfound}"></h1>
+        </p>
+        <p class="card-text" th:if="${booking!=null && booking.id!=null}">
+        <div class="booking-view">
+            <div>
+                <label>Booking ID</label><br/>
+                <span th:text="${booking.id}"></span>
+            </div>
+            <div>
+                <label>First Name</label><br/>
+                <span th:text="${booking.person.firstname}"></span>
+            </div>
+            <div>
+                <label>Last Name</label><br/>
+                <span th:text="${booking.person.lastname}"></span>
+            </div>
+            <div>
+                <label>Street</label><br/>
+                <span th:text="${booking.person.address.street}"></span>
+            </div>
+            <div>
+                <label>City</label><br/>
+                <span th:text="${booking.person.address.city}"></span>
+            </div>
+            <div>
+                <label>County</label><br/>
+                <span th:text="${booking.person.address.county}"></span>
+            </div>
+            <div>
+                <label>Car</label>
+                <div>
+                    <label>Make</label><br/>
+                    <span th:text="${booking.car.make}"></span>
+                </div>
+                <div>
+                    <label>Mode;</label><br/>
+                    <span th:text="${booking.car.model}"></span>
+                </div>
+                <div>
+                    <label>Color</label><br/>
+                    <span th:text="${booking.car.color}"></span>
+                </div>
+            </div>
+            <div>
+                <label>Collect car at</label><br/>
+                <span th:text="${booking.bookingTimeFrame.bookingTimeFrom}"></span>
+            </div>
+            <div>
+                <label>Return car at</label><br/>
+                <span th:text="${booking.bookingTimeFrame.bookingTimeTo}"></span>
+            </div>
+        </div>
+        </p>
     </div>
 </div>
 </body>

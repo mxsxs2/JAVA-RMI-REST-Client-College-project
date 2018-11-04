@@ -6,6 +6,7 @@ import ie.gmit.sw.server.RMIClient;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.UUID;
 
 
 @Path("booking")
@@ -27,9 +28,12 @@ public class BookingService {
     @Consumes(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Path("create")
     public Response addBooking(Booking c) {
-        if (c.getId() == null || c.getCar() == null || c.getBookingTimeFrame() == null || c.getPerson() == null) {
+        System.out.println(c);
+        if (c.getCar() == null || c.getBookingTimeFrame() == null || c.getPerson() == null) {
             return Response.status(400).build();
         }
+        c.setId(UUID.randomUUID().toString());
+        c.getPerson().setId(UUID.randomUUID().toString());
         if (RMIClient.getInstance().addBooking(c)) {
             return Response.status(200).entity(c).build();
         }

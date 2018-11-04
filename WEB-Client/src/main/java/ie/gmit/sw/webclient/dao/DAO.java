@@ -10,13 +10,15 @@ public abstract class DAO<T> {
 
     /**
      * Get entity for id
+     *
      * @return
      */
     public abstract T forId(String id);
 
     /**
      * Save entity
+     *
      * @param o
      */
-    public abstract void save(T o);
+    public abstract T save(T o);
 }
