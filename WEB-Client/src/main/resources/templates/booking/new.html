@@ -6,8 +6,51 @@
 <div class="card" style="width: 18rem;">
     <div class="card-body">
         <h5 class="card-title" th:text="${message}+'Booking'"></h5>
-        <p class="card-text"></p>
+        <p class="card-text">
+            <form action="#" th:action="@{/booking/new}" th:object="${booking}" method="post">
+                <div class="form-group">
+                    <label htmlFor="fn">First Name</label>
+                    <input type="text" id="fn" class="form-control" th:field="*{person.firstname}"/>
+                </div>
+                <div class="form-group">
+                    <label htmlFor="ln">Last Name</label>
+                    <input type="text" id="ln" class="form-control" th:field="*{person.lastname}"/>
+                </div>
+                <div class="form-group">
+                    <label htmlFor="street">Street</label>
+                    <input type="text" id="street" class="form-control" th:field="*{person.address.street}"/>
+                </div>
+                <div class="form-group">
+                    <label htmlFor="city">City</label>
+                    <input type="text" id="city" class="form-control" th:field="*{person.address.city}"/>
+                </div>
+                <div class="form-group">
+                    <label htmlFor="country">County</label>
+                    <input type="text" id="country" class="form-control" th:field="*{person.address.county}"/>
+                </div>
+                <div class="form-group">
+                    <label htmlFor="country">Car</label>
+                    <select class="form-control" th:field="*{car}" id="car">
+                        <option th:each="c : ${cars}" th:value="${c.id}"
+                                th:text="${c.make}+' '+${c.model}+' '+${c.color}"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label htmlFor="from">Book From</label>
+                    <input type="text" id="from" class="form-control" th:field="*{bookingTimeFrame.bookingTimeFrom}"/>
+                </div>
+                <div class="form-group">
+                    <label htmlFor="to">Book Until</label>
+                    <input type="text" id="to" class="form-control" th:field="*{bookingTimeFrame.bookingTimeTo}"/>
+                </div>
+                <div class="form-group">
+        <p><input type="submit" value="Submit" class="btn btn-dark"/>
+            <input type="reset" value="Reset" class="btn btn-dark"/></p>
     </div>
+    </form>
+
+    </p>
+</div>
 </div>
 </body>
 </html>

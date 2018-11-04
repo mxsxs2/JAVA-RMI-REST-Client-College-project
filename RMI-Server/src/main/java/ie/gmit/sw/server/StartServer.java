@@ -1,7 +1,4 @@
-package ie.gmit.sw;
-
-import ie.gmit.sw.server.MongoConnection;
-import ie.gmit.sw.server.Server;
+package ie.gmit.sw.server;
 
 /**
  * Runner class for the RMI Server application

@@ -1,0 +1,12 @@
+<jaxb:bindings
+        xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+        xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.1"
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        jaxb:extensionBindingPrefixes="xjc">
+    <jaxb:bindings schemaLocation="schema.xsd" node="/xs:schema">
+        <jaxb:globalBindings>
+            <xjc:simple/>
+            <jaxb:serializable uid="1"/>
+        </jaxb:globalBindings>
+    </jaxb:bindings>
+</jaxb:bindings>

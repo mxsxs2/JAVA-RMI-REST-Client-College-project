@@ -2,12 +2,11 @@ package ie.gmit.sw.restserver;
 
 import ie.gmit.sw.model.BookingTimeFrame;
 import ie.gmit.sw.model.Car;
+import ie.gmit.sw.model.Cars;
 import ie.gmit.sw.server.RMIClient;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 import java.util.List;
 
 
@@ -46,6 +45,22 @@ public class CarService {
     @Path("list")
     public Response getCars() {
         List<Car> list = RMIClient.getInstance().getCars();
+        Cars cars = new Cars();
+        cars.setCars(list);
+        if (list.size() != 0) {
+            return Response.status(200).entity(cars).build();
+        }
+        return Response.status(204).build();
+    }
+
+    @GET
+    @Produces(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    //@Consumes(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    @Path("list2")
+    public Response getCarsr(@Context HttpHeaders headers) {
+
+        System.out.println(headers.getMediaType());
+        List<Car> list = RMIClient.getInstance().getCars();
 
         if (list.size() != 0) {
             return Response.status(200).entity(new GenericEntity<List<Car>>(list) {
@@ -53,4 +68,5 @@ public class CarService {
         }
         return Response.status(204).build();
     }
+
 }
