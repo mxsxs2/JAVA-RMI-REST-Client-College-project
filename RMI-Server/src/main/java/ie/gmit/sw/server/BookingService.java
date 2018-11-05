@@ -28,6 +28,8 @@ interface BookingService extends Remote {
 
     public ArrayList<Booking> getBookings() throws RemoteException;
 
+    public boolean deleteBooking(String id) throws RemoteException;
+
     public boolean addCar(Car c) throws RemoteException;
 
     public Car getCar(String id) throws RemoteException;

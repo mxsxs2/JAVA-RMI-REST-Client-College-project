@@ -133,9 +133,22 @@ public class BookingController {
         return "forward:/booking/view";
     }
 
-    @RequestMapping("/delete")
-    public String delete(ModelMap model) {
-        model.put("message", "Delete ");
-        return "booking/delete";
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable("id") String id, ModelMap model) {
+        model.put("id", id);
+        model.put("message", "");
+        if (bookingDAO.delete(id)) {
+            model.put("deleted", true);
+        } else {
+            model.put("deleted", false);
+        }
+        //Try to get it again to confirm
+        Booking b = bookingDAO.forId(id);
+        if (b != null) {
+            model.put("booking", b);
+            model.put("deleted", false);
+        }
+
+        return "booking/view";
     }
 }

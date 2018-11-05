@@ -113,6 +113,11 @@ public class RMIClient implements BookingService {
     }
 
     @Override
+    public boolean deleteBooking(String id) {
+        return (Boolean) invokeOne("deleteBooking", id);
+    }
+
+    @Override
     public boolean addCar(Car c) {
         return (Boolean) invokeOne("addCar", c);
     }

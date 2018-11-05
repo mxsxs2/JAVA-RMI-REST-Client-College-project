@@ -8,6 +8,9 @@
         <h5 class="card-title" th:text="${message}+'Booking'"></h5>
         <div class="card-text" th:if="${booking==null}">
             <h2 th:if="${notfound}" th:text="${'Could not find booking '+notfound}" class="error"></h2>
+            <h2 th:if="${delete!=null && delete==true}" th:text="${'The booking is deleted'}" class="error"></h2>
+            <h2 th:if="${delete!=null && delete==false}" th:text="${'Could not delete booking please try again later'}"
+                class="error"></h2>
             <div class="form-group">
                 <label htmlFor="bid">Booking number</label>
                 <input type="text" id="bid" class="form-control"/>
@@ -71,6 +74,11 @@
                 <button class="btn btn-dark btn-block" th:data-id="${booking?.id}"
                         onClick="location.href='/booking/modify/'+this.dataset.id">
                     Change
+                </button>
+                <button class="btn btn-danger btn-block" th:data-id="${booking?.id}"
+                        onClick="if(confirm('Do you want to delete this booking?' )){location.href='/booking/delete/'
+                        +this.dataset.id}">
+                    Delete
                 </button>
             </div>
         </div>

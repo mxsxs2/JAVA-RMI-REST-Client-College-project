@@ -37,6 +37,34 @@ public class RestUtils {
      * @return
      */
     public Object restRequest(String path, Object obj, HttpMethod method) throws HttpClientErrorException {
+        //Get the response from the server
+        ResponseEntity<Object> responseEntity = doRequest(path, obj, method);
+        //Return response
+        return responseEntity.getBody();
+    }
+
+    /**
+     * Get object from rest server
+     *
+     * @param path
+     * @param obj
+     * @return
+     */
+    public boolean restBooleanRequest(String path, Object obj, HttpMethod method) throws HttpClientErrorException {
+        //Get the response from the server
+        ResponseEntity<Object> responseEntity = doRequest(path, obj, method);
+        //Return response
+        return responseEntity.getStatusCodeValue() == 200;
+    }
+
+    /**
+     * Response from rest server
+     *
+     * @param path
+     * @param obj
+     * @return
+     */
+    private ResponseEntity doRequest(String path, Object obj, HttpMethod method) throws HttpClientErrorException {
         //Get new template
         RestTemplate restTemplate = new RestTemplate();
         //Get new headers
@@ -49,26 +77,7 @@ public class RestUtils {
         HttpEntity<Object> request = new HttpEntity<>(obj, headers);
         //Get the response from the server
         ResponseEntity<Object> responseEntity = restTemplate.exchange(restURI + path, method, request, (Class<Object>) obj.getClass());
-        //Arrays.asList(responseEntity.getBody().getCars()).forEach(System.out::println);
         //Return response
-        return responseEntity.getBody();
-    }
-
-    public Object restPostRequest(String path, Object obj) {
-        //Get new template
-        RestTemplate restTemplate = new RestTemplate();
-        //Get new headers
-        HttpHeaders headers = new HttpHeaders();
-        //Set accept type
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_XML));
-        //Set content type
-        headers.setContentType(MediaType.APPLICATION_XML);
-        //Create new request with the new headers
-        HttpEntity<Object> request = new HttpEntity<>(obj, headers);
-        //Get the response from the server
-        ResponseEntity<Object> responseEntity = restTemplate.exchange(restURI + path, HttpMethod.POST, request, (Class<Object>) obj.getClass());
-        //Arrays.asList(responseEntity.getBody().getCars()).forEach(System.out::println);
-        //Return response
-        return responseEntity.getBody();
+        return responseEntity;
     }
 }

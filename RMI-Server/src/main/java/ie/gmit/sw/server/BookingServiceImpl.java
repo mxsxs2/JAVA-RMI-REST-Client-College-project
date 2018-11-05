@@ -3,6 +3,7 @@ package ie.gmit.sw.server;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import ie.gmit.sw.model.Booking;
 import ie.gmit.sw.model.BookingTimeFrame;
@@ -87,6 +88,21 @@ public class BookingServiceImpl extends UnicastRemoteObject implements BookingSe
             e.printStackTrace();
         }
         return new ArrayList<>();
+    }
+
+    @Override
+    public boolean deleteBooking(String id) throws RemoteException {
+        try {
+            //Delete one
+            DeleteResult deleteResult = bookingCollection.deleteOne(
+                    //Filter by id
+                    Filters.eq("_id", id)
+            );
+            //Check if any was modified
+            return deleteResult.getDeletedCount()== 1;
+        } catch (Exception e) {
+        }
+        return false;
     }
 
     @Override

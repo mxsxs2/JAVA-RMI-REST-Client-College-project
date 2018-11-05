@@ -54,4 +54,15 @@ public class BookingService {
         return Response.status(409).build();
     }
 
+    @DELETE
+    @Produces(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    @Consumes(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    @Path("delete/{id}")
+    public Response deleteBooking(@PathParam("id") String id) {
+        if (RMIClient.getInstance().deleteBooking(id)) {
+            return Response.status(200).build();
+        }
+        return Response.status(204).build();
+    }
+
 }

@@ -13,7 +13,7 @@ import org.springframework.web.client.HttpClientErrorException;
 public class BookingDAO extends DAO<Booking> {
     @Value("${spring.data.rest.base-path}")
     private String restURI;
-    public static String restCarPath = "/booking/";
+    public static String restBookingPath = "/booking/";
 
     public BookingDAO() {
         super();
@@ -22,13 +22,13 @@ public class BookingDAO extends DAO<Booking> {
     @Override
     public Booking forId(String id) {
         //Get the booking
-        return (Booking) super.restUtils.restRequest(restCarPath + "/" + id, new Booking(), HttpMethod.GET);
+        return (Booking) super.restUtils.restRequest(restBookingPath + "/" + id, new Booking(), HttpMethod.GET);
     }
 
     @Override
     public Booking save(Booking o) {
         try {
-            Object obj = super.restUtils.restRequest(restCarPath + "/create", o, HttpMethod.PUT);
+            Object obj = super.restUtils.restRequest(restBookingPath + "/create", o, HttpMethod.PUT);
             return (Booking) obj;
         } catch (HttpClientErrorException e) {
             System.out.println(e.getMessage());
@@ -44,12 +44,27 @@ public class BookingDAO extends DAO<Booking> {
      */
     public Booking change(Booking o) {
         try {
-            Object obj = super.restUtils.restRequest(restCarPath + "/change", o, HttpMethod.PUT);
+            Object obj = super.restUtils.restRequest(restBookingPath + "/change", o, HttpMethod.PUT);
             return (Booking) obj;
         } catch (HttpClientErrorException e) {
             System.out.println(e.getMessage());
         }
         return null;
+    }
+
+    /**
+     * Delete a booking
+     *
+     * @param id
+     * @return
+     */
+    public boolean delete(String id) {
+        try {
+            return super.restUtils.restBooleanRequest(restBookingPath + "/delete/" + id, new Booking(), HttpMethod.DELETE);
+        } catch (HttpClientErrorException e) {
+            System.out.println(e.getMessage());
+        }
+        return false;
     }
 
 }
