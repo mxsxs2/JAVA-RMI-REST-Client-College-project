@@ -65,7 +65,7 @@ public class BookingController {
     }
 
     @PostMapping("/new")
-    public String newBooking(@Valid @ModelAttribute("booking") Booking booking, @RequestParam("modify") String modify, BindingResult bindingResult, ModelMap model) {
+    public String newBooking(@RequestParam("modify") String modify, @Valid @ModelAttribute("booking") Booking booking, BindingResult bindingResult, ModelMap model) {
         //Init car list holder
         List<Car> c = new ArrayList<>();
         model.put("message", "Create ");
@@ -106,6 +106,7 @@ public class BookingController {
                 System.out.println(e.getDefaultMessage());
                 System.out.println(e.toString());
             });*/
+            model.put("booking", booking);
             return "booking/new";
         } else {
 

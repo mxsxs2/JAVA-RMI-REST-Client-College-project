@@ -65,11 +65,15 @@
             </div>
             <div>
                 <label>Collect car at</label><br/>
-                <span th:text="*{bookingTimeFrame?.bookingTimeFrom}?${#dates.format(new Date(bookingTimeFrame?.bookingTimeFrom), 'yyyy/MM/dd H:m')}:''}"></span>
+                <span th:text="*{{bookingTimeFrame?.bookingTimeFrom}}"></span>
             </div>
             <div>
                 <label>Return car at</label><br/>
-                <span th:text="*{bookingTimeFrame?.bookingTimeTo}"></span>
+                <span th:text="*{{bookingTimeFrame?.bookingTimeTo}}"></span>
+            </div>
+            <div>
+                <label>Booked/Changed at</label><br/>
+                <span th:text="*{{reservationTime}}"></span>
             </div>
             <div>
                 <button class="btn btn-dark btn-block" th:data-id="${booking?.id}"
