@@ -42,6 +42,7 @@ public class BookingServiceImpl extends UnicastRemoteObject implements BookingSe
             //Find the firs object
             return (Booking) bookingCollection.find(Filters.eq("_id", id)).first();
         } catch (Exception e) {
+            this.checkExcepton(e.getMessage());
         }
 
         return null;
@@ -55,6 +56,7 @@ public class BookingServiceImpl extends UnicastRemoteObject implements BookingSe
             //Check if it was added
             return bookingCollection.find(Filters.eq("_id", b.getId())).first() != null;
         } catch (Exception e) {
+            this.checkExcepton(e.getMessage());
             //Return true if duplicate
             return e.getMessage().contains("E11000");
         }
@@ -75,6 +77,7 @@ public class BookingServiceImpl extends UnicastRemoteObject implements BookingSe
             //Check if any was modified
             return updateResult.getModifiedCount() == 1;
         } catch (Exception e) {
+            this.checkExcepton(e.getMessage());
         }
         return false;
     }
@@ -85,6 +88,7 @@ public class BookingServiceImpl extends UnicastRemoteObject implements BookingSe
             //Get a list of cars from mongo
             return (ArrayList<Booking>) bookingCollection.find(Booking.class).into(new ArrayList<Booking>());
         } catch (Exception e) {
+            this.checkExcepton(e.getMessage());
             e.printStackTrace();
         }
         return new ArrayList<>();
@@ -101,6 +105,7 @@ public class BookingServiceImpl extends UnicastRemoteObject implements BookingSe
             //Check if any was modified
             return deleteResult.getDeletedCount()== 1;
         } catch (Exception e) {
+            this.checkExcepton(e.getMessage());
         }
         return false;
     }
@@ -114,6 +119,7 @@ public class BookingServiceImpl extends UnicastRemoteObject implements BookingSe
             //Check if it was added
             return carCollection.find(Filters.eq("_id", c.getId())).first() != null;
         } catch (Exception e) {
+            this.checkExcepton(e.getMessage());
             //Return true if duplicate
             return e.getMessage().contains("E11000");
         }
@@ -125,6 +131,7 @@ public class BookingServiceImpl extends UnicastRemoteObject implements BookingSe
             //Find the firs object
             return (Car) carCollection.find(Filters.eq("_id", id)).first();
         } catch (Exception e) {
+            this.checkExcepton(e.getMessage());
         }
 
         return null;
@@ -136,7 +143,7 @@ public class BookingServiceImpl extends UnicastRemoteObject implements BookingSe
             //Get a list of cars from mongo
             return (ArrayList<Car>) carCollection.find(Car.class).into(new ArrayList<Car>());
         } catch (Exception e) {
-            e.printStackTrace();
+            this.checkExcepton(e.getMessage());
         }
         return new ArrayList<>();
     }
@@ -149,7 +156,14 @@ public class BookingServiceImpl extends UnicastRemoteObject implements BookingSe
                 Filters.lte("bookingTimeFrame.bookingTimeFrom", timeFrame.getBookingTimeTo()),
                 Filters.gte("bookingTimeFrame.bookingTimeTo", timeFrame.getBookingTimeFrom())
         );
-        return bookingCollection.find(f2).first() == null;
+        try {
+            return bookingCollection.find(f2).first() == null;
+        } catch (Exception e) {
+            this.checkExcepton(e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+
     }
 
     /**
@@ -168,5 +182,15 @@ public class BookingServiceImpl extends UnicastRemoteObject implements BookingSe
         StringWriter sw = new StringWriter();
         m.marshal(o, sw);
         return sw.toString();
+    }
+
+    /**
+     * Checks if the database connection fas refused
+     * @param message
+     */
+    private void checkExcepton(String message){
+        if(message.contains("refused")){
+            System.out.println("Could not connect to database.\nCheck if the host, port and database name are set up correctly.");
+        }
     }
 }

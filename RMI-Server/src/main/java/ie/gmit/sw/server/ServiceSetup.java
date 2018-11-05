@@ -6,6 +6,7 @@ package ie.gmit.sw.server;
  */
 public class ServiceSetup {
     public static void main(String[] args) {
+        //System.setProperty("java.rmi.server.hostname","192.168.0.199");
         Server s = new Server(args);
 
         try {

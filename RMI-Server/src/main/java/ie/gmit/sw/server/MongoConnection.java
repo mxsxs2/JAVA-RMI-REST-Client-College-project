@@ -102,7 +102,7 @@ public class MongoConnection {
         //Loop the args
         for (int i = 0; i < args.length; i++) {
             //Check if there is next
-            if (args.length < i + 1) {
+            if (args.length > i + 1) {
                 //Decide which parameter
                 switch (args[i]) {
                     case "-dbport":

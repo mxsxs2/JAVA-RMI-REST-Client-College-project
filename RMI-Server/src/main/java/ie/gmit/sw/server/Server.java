@@ -2,8 +2,10 @@ package ie.gmit.sw.server;
 
 import com.mongodb.client.MongoDatabase;
 
+import java.rmi.AlreadyBoundException;
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 
 /**
  * Sets up the RMI server and starts it
@@ -11,6 +13,7 @@ import java.rmi.registry.LocateRegistry;
 public class Server {
     //Serving port
     private int port = 1099;
+    private String name= "BookingRMIService";
 
     /**
      * Constuctor taking the system args
@@ -31,14 +34,18 @@ public class Server {
 
         //Interface for booking
         BookingService s = new BookingServiceImpl(db);
-
-        //Start the RMI regstry on port 1099
-        LocateRegistry.createRegistry(port);
-
+        System.out.println(port);
+        //Start the RMI registry on port 1099
+        Registry r=LocateRegistry.createRegistry(port);
+        try {
+            r.bind(name, s);
+        } catch (AlreadyBoundException ae) {
+            r.rebind(name, s);
+        }
         //Bind to "RMIService
-        Naming.rebind("BookingRMIService", s);
+        //Naming.rebind("BookingRMIService", s);
 
-        System.out.println("Server started on port:" + port);
+        System.out.println("Server started on port:" + port + " as \""+name+"\"");
     }
 
     /**
@@ -48,16 +55,22 @@ public class Server {
      * @param args
      */
     private void setPortNumberFromArgs(String[] args) {
-        //Loop the args
         for (int i = 0; i < args.length; i++) {
-            //Check if port exists
-            if (args[i].equals("-port") && args.length < i + 1) {
-                try {
-                    //Try to parse the port number
-                    port = Integer.valueOf(args[i + 1]);
-                } catch (Exception e) {
+            //Check if there is next
+            if (args.length > i + 1) {
+                //Decide which parameter
+                switch (args[i]) {
+                    case "-port":
+                        try {
+                            //Try to parse the port number
+                            port = Integer.valueOf(args[i + 1]);
+                        } catch (Exception e) {
+                        }
+                        break;
+                    case "-name":
+                        name = args[i + 1];
+                        break;
                 }
-                break;
             }
         }
     }

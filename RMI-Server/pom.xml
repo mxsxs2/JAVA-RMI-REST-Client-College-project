@@ -63,6 +63,29 @@
         </pluginManagement>
         <plugins>
             <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>ie.gmit.sw.server.ServiceSetup</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>create-runnable-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--<plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.6.0</version>
@@ -73,16 +96,16 @@
                             <goal>java</goal>
                         </goals>
                         <configuration>
-                            <mainClass>ie.gmit.sw.server.StartServer</mainClass>
+                            <mainClass>ie.gmit.sw.server.ServiceSetup</mainClass>
                             <executable>java</executable>
                         </configuration>
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>ie.gmit.sw.server.StartServer</mainClass>
+                    <mainClass>ie.gmit.sw.server.ServiceSetup</mainClass>
                     <executable>java</executable>
                 </configuration>
-            </plugin>
+            </plugin>-->
             <plugin>
                 <groupId>org.jvnet.jaxb2.maven2</groupId>
                 <artifactId>maven-jaxb2-plugin</artifactId>
