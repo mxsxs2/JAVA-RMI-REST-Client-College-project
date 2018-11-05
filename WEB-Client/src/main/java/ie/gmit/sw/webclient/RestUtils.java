@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.ConnectException;
 import java.util.Collections;
 
 @Service
@@ -36,7 +37,7 @@ public class RestUtils {
      * @param obj
      * @return
      */
-    public Object restRequest(String path, Object obj, HttpMethod method) throws HttpClientErrorException {
+    public Object restRequest(String path, Object obj, HttpMethod method) throws HttpClientErrorException, ConnectException {
         //Get the response from the server
         ResponseEntity<Object> responseEntity = doRequest(path, obj, method);
         //Return response
@@ -50,7 +51,7 @@ public class RestUtils {
      * @param obj
      * @return
      */
-    public boolean restBooleanRequest(String path, Object obj, HttpMethod method) throws HttpClientErrorException {
+    public boolean restBooleanRequest(String path, Object obj, HttpMethod method) throws HttpClientErrorException, ConnectException {
         //Get the response from the server
         ResponseEntity<Object> responseEntity = doRequest(path, obj, method);
         //Return response
@@ -64,7 +65,7 @@ public class RestUtils {
      * @param obj
      * @return
      */
-    private ResponseEntity doRequest(String path, Object obj, HttpMethod method) throws HttpClientErrorException {
+    private ResponseEntity doRequest(String path, Object obj, HttpMethod method) throws HttpClientErrorException, ConnectException {
         //Get new template
         RestTemplate restTemplate = new RestTemplate();
         //Get new headers
@@ -79,5 +80,16 @@ public class RestUtils {
         ResponseEntity<Object> responseEntity = restTemplate.exchange(restURI + path, method, request, (Class<Object>) obj.getClass());
         //Return response
         return responseEntity;
+    }
+
+    /**
+     * Checks if the rest server available.
+     *
+     * @param errorMessage
+     * @return
+     */
+    public static boolean isServerAway(String errorMessage) {
+        if (errorMessage == null) return false;
+        return (errorMessage.contains("404") || errorMessage.contains("500") || errorMessage.contains("Connection refused"));
     }
 }

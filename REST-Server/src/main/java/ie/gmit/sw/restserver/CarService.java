@@ -58,8 +58,6 @@ public class CarService {
     //@Consumes(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Path("list2")
     public Response getCarsr(@Context HttpHeaders headers) {
-
-        System.out.println(headers.getMediaType());
         List<Car> list = RMIClient.getInstance().getCars();
 
         if (list.size() != 0) {

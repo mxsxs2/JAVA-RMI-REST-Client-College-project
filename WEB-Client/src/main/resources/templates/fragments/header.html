@@ -35,6 +35,10 @@
         </ul>
     </div>
 </nav>
+<div class="no-server-message" th:fragment="noserver(exists)">
+    <h1 class="error" th:if="${exists!=null && exists==true}">
+        The server is currently not available, Please try again later.
+    </h1>
 </div>
 </body>
 </html>

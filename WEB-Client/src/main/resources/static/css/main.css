@@ -15,3 +15,8 @@
 .booking-view label {
     font-weight: bold;
 }
+
+.no-server-message {
+    width: 100%;
+    text-align: center;
+}

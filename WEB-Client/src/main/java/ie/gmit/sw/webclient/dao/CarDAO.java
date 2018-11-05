@@ -9,7 +9,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.HttpClientErrorException;
 
-import java.util.ArrayList;
+import java.net.ConnectException;
 import java.util.List;
 
 @Repository
@@ -28,17 +28,13 @@ public class CarDAO extends DAO<Car> {
      *
      * @return
      */
-    public List<Car> getCars() {
-        try {
-            //Get a list of cars from the rest server
-            return ((Cars) super.restUtils.restRequest(restCarPath + "list", new Cars(), HttpMethod.GET)).getCars();
-        } catch (HttpClientErrorException e) {
-            return new ArrayList<>();
-        }
+    public List<Car> getCars() throws HttpClientErrorException, ConnectException {
+        //Get a list of cars from the rest server
+        return ((Cars) super.restUtils.restRequest(restCarPath + "list", new Cars(), HttpMethod.GET)).getCars();
     }
 
     @Override
-    public Car forId(String id) {
+    public Car forId(String id) throws HttpClientErrorException, ConnectException {
         //Filter the cars list to match the id
         return this.getCars().stream().filter((c) -> c.getId().equals(id)).findFirst().get();
     }

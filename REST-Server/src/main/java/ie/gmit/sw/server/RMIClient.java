@@ -49,7 +49,6 @@ public class RMIClient implements BookingService {
         try {
             return BookingService.class.getDeclaredMethod(method).invoke(connect());
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return null;
     }
@@ -65,7 +64,6 @@ public class RMIClient implements BookingService {
         try {
             return BookingService.class.getDeclaredMethod(method, a.getClass()).invoke(connect(), a);
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return null;
     }
@@ -82,7 +80,6 @@ public class RMIClient implements BookingService {
         try {
             return BookingService.class.getDeclaredMethod(method, a.getClass(), b.getClass()).invoke(connect(), a, b);
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return null;
     }

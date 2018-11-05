@@ -28,7 +28,6 @@ public class BookingService {
     @Consumes(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Path("create")
     public Response addBooking(Booking c) {
-        System.out.println(c);
         if (c.getCar() == null || c.getBookingTimeFrame() == null || c.getPerson() == null) {
             return Response.status(400).build();
         }

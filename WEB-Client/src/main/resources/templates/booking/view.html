@@ -3,8 +3,9 @@
 <head th:include="fragments/header :: head(title='WEB-Client New Booking')"></head>
 <body>
 <div th:replace="fragments/header :: menu('booking/view')"></div>
+<div th:replace="fragments/header :: noserver(${noserver})"></div>
 <div class="card" style="width: 18rem;">
-    <div class="card-body">
+    <div class="card-body" th:if="${noserver==null || !noserver}">
         <h5 class="card-title" th:text="${message}+'Booking'"></h5>
         <div class="card-text" th:if="${booking==null}">
             <h2 th:if="${notfound}" th:text="${'Could not find booking '+notfound}" class="error"></h2>
@@ -64,7 +65,7 @@
             </div>
             <div>
                 <label>Collect car at</label><br/>
-                <span th:text="*{bookingTimeFrame?.bookingTimeFrom}"></span>
+                <span th:text="*{bookingTimeFrame?.bookingTimeFrom}?${#dates.format(new Date(bookingTimeFrame?.bookingTimeFrom), 'yyyy/MM/dd H:m')}:''}"></span>
             </div>
             <div>
                 <label>Return car at</label><br/>

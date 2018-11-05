@@ -8,6 +8,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.net.ConnectException;
+
 @Repository
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class BookingDAO extends DAO<Booking> {
@@ -20,20 +22,14 @@ public class BookingDAO extends DAO<Booking> {
     }
 
     @Override
-    public Booking forId(String id) {
+    public Booking forId(String id) throws HttpClientErrorException, ConnectException {
         //Get the booking
         return (Booking) super.restUtils.restRequest(restBookingPath + "/" + id, new Booking(), HttpMethod.GET);
     }
 
     @Override
-    public Booking save(Booking o) {
-        try {
-            Object obj = super.restUtils.restRequest(restBookingPath + "/create", o, HttpMethod.PUT);
-            return (Booking) obj;
-        } catch (HttpClientErrorException e) {
-            System.out.println(e.getMessage());
-        }
-        return null;
+    public Booking save(Booking o) throws HttpClientErrorException, ConnectException {
+        return (Booking) super.restUtils.restRequest(restBookingPath + "/create", o, HttpMethod.PUT);
     }
 
     /**
@@ -42,14 +38,8 @@ public class BookingDAO extends DAO<Booking> {
      * @param o
      * @return
      */
-    public Booking change(Booking o) {
-        try {
-            Object obj = super.restUtils.restRequest(restBookingPath + "/change", o, HttpMethod.PUT);
-            return (Booking) obj;
-        } catch (HttpClientErrorException e) {
-            System.out.println(e.getMessage());
-        }
-        return null;
+    public Booking change(Booking o) throws HttpClientErrorException, ConnectException {
+        return (Booking) super.restUtils.restRequest(restBookingPath + "/change", o, HttpMethod.PUT);
     }
 
     /**
@@ -58,13 +48,8 @@ public class BookingDAO extends DAO<Booking> {
      * @param id
      * @return
      */
-    public boolean delete(String id) {
-        try {
-            return super.restUtils.restBooleanRequest(restBookingPath + "/delete/" + id, new Booking(), HttpMethod.DELETE);
-        } catch (HttpClientErrorException e) {
-            System.out.println(e.getMessage());
-        }
-        return false;
+    public boolean delete(String id) throws HttpClientErrorException, ConnectException {
+        return super.restUtils.restBooleanRequest(restBookingPath + "/delete/" + id, new Booking(), HttpMethod.DELETE);
     }
 
 }
