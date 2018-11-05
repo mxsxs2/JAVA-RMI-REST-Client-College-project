@@ -3,62 +3,54 @@ package ie.gmit.sw.restserver;
 import ie.gmit.sw.model.Booking;
 import ie.gmit.sw.server.RMIClient;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import javax.servlet.ServletContext;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.util.UUID;
 
 
 @Path("booking")
-public class BookingService {
-    @GET
-    @Produces(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @Consumes(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @Path("{id}")
-    public Response getBooking(@PathParam("id") String id) {
-        Booking c = RMIClient.getInstance().getBooking(id);
+public class BookingService implements IBookingService {
+    @Context
+    private ServletContext servletContext;
+
+    @Override
+    public Response getBooking(String id) {
+        Booking c = RMIClient.getInstance(servletContext).getBooking(id);
         if (c != null) {
             return Response.status(200).entity(c).build();
         }
         return Response.status(204).build();
     }
 
-    @PUT
-    @Produces(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @Consumes(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @Path("create")
+    @Override
     public Response addBooking(Booking c) {
         if (c.getCar() == null || c.getBookingTimeFrame() == null || c.getPerson() == null) {
             return Response.status(400).build();
         }
         c.setId(UUID.randomUUID().toString());
         c.getPerson().setId(UUID.randomUUID().toString());
-        if (RMIClient.getInstance().addBooking(c)) {
+        if (RMIClient.getInstance(servletContext).addBooking(c)) {
             return Response.status(200).entity(c).build();
         }
         return Response.status(409).build();
     }
 
-    @PUT
-    @Produces(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @Consumes(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @Path("change")
+    @Override
     public Response changeBooking(Booking c) {
         if (c.getCar() == null || c.getBookingTimeFrame() == null || c.getPerson() == null) {
             return Response.status(400).build();
         }
-        if (RMIClient.getInstance().changeBooking(c)) {
+        if (RMIClient.getInstance(servletContext).changeBooking(c)) {
             return Response.status(200).entity(c).build();
         }
         return Response.status(409).build();
     }
 
-    @DELETE
-    @Produces(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @Consumes(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @Path("delete/{id}")
-    public Response deleteBooking(@PathParam("id") String id) {
-        if (RMIClient.getInstance().deleteBooking(id)) {
+    @Override
+    public Response deleteBooking(String id) {
+        if (RMIClient.getInstance(servletContext).deleteBooking(id)) {
             return Response.status(200).build();
         }
         return Response.status(204).build();

@@ -4,6 +4,7 @@ import ie.gmit.sw.model.Booking;
 import ie.gmit.sw.model.BookingTimeFrame;
 import ie.gmit.sw.model.Car;
 
+import javax.servlet.ServletContext;
 import java.rmi.Naming;
 import java.util.ArrayList;
 
@@ -13,6 +14,9 @@ import java.util.ArrayList;
 public class RMIClient implements BookingService {
     //Encapsulated RMIClient instance
     private static final RMIClient rmic = new RMIClient();
+    private String host = "127.0.0.1";
+    private String port = "1099";
+    private String serviceName = "BookingRMIService";
 
     /**
      * Private constructor to block instantiation
@@ -25,7 +29,16 @@ public class RMIClient implements BookingService {
      *
      * @return
      */
-    public static RMIClient getInstance() {
+    public static RMIClient getInstance(ServletContext props) {
+        //Set the rmi connection details from context
+        rmic.setHost(props.getInitParameter("rmiHost"));
+        rmic.setPort(props.getInitParameter("rmiPort"));
+        rmic.setServiceName(props.getInitParameter("rmiServiceName"));
+        /*props.forEach((k, v) -> {
+            System.out.println(k);
+            System.out.println(v);
+            System.out.println("-------");
+        });*/
         return rmic;
     }
 
@@ -36,7 +49,7 @@ public class RMIClient implements BookingService {
      * @throws Exception
      */
     private BookingService connect() throws Exception {
-        return (BookingService) Naming.lookup("rmi://127.0.0.1:1099/BookingRMIService");
+        return (BookingService) Naming.lookup("rmi://" + host + ":" + port + "/" + serviceName);
     }
 
     /**
@@ -136,5 +149,32 @@ public class RMIClient implements BookingService {
     @Override
     public boolean isCarAvailable(String carId, BookingTimeFrame timeFrame) {
         return (Boolean) invokeTwo("isCarAvailable", carId, timeFrame);
+    }
+
+    /**
+     * Setter for host
+     *
+     * @param host
+     */
+    public void setHost(String host) {
+        this.host = host != null ? host : this.host;
+    }
+
+    /**
+     * Setter for port
+     *
+     * @param port
+     */
+    public void setPort(String port) {
+        this.port = port != null ? port : this.port;
+    }
+
+    /**
+     * setter for serviceName
+     *
+     * @param serviceName
+     */
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName != null ? serviceName : this.serviceName;
     }
 }

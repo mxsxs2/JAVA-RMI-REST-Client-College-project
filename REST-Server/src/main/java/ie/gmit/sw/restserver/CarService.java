@@ -5,46 +5,42 @@ import ie.gmit.sw.model.Car;
 import ie.gmit.sw.model.Cars;
 import ie.gmit.sw.server.RMIClient;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.*;
+import javax.servlet.ServletContext;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 
 @Path("car")
-public class CarService {
-    @GET
-    @Produces(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @Consumes(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @Path("{id}")
-    public Response getCar(@PathParam("id") String id) {
-        Car c = RMIClient.getInstance().getCar(id);
+public class CarService implements ICarService {
+    @Context
+    private ServletContext servletContext;
+
+    @Override
+    public Response getCar(String id) {
+        Car c = RMIClient.getInstance(servletContext).getCar(id);
         if (c != null) {
             return Response.status(200).entity(c).build();
         }
         return Response.status(204).build();
     }
 
-    @GET
-    @Produces(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @Consumes(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @Path("{id}/{from}/{to}")
-    public Response isCarAvailable(@PathParam("id") String id, @PathParam("from") long from, @PathParam("to") long to) {
+    @Override
+    public Response isCarAvailable(String id, long from, long to) {
         BookingTimeFrame bt = new BookingTimeFrame();
         bt.setBookingTimeFrom(from);
         bt.setBookingTimeTo(to);
 
-        if (RMIClient.getInstance().isCarAvailable(id, bt)) {
+        if (RMIClient.getInstance(servletContext).isCarAvailable(id, bt)) {
             return Response.status(200).build();
         }
         return Response.status(204).build();
     }
 
-    @GET
-    @Produces(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @Consumes(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @Path("list")
+    @Override
     public Response getCars() {
-        List<Car> list = RMIClient.getInstance().getCars();
+        List<Car> list = RMIClient.getInstance(servletContext).getCars();
         Cars cars = new Cars();
         cars.setCars(list);
         if (list.size() != 0) {
@@ -52,19 +48,4 @@ public class CarService {
         }
         return Response.status(204).build();
     }
-
-    @GET
-    @Produces(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    //@Consumes(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @Path("list2")
-    public Response getCarsr(@Context HttpHeaders headers) {
-        List<Car> list = RMIClient.getInstance().getCars();
-
-        if (list.size() != 0) {
-            return Response.status(200).entity(new GenericEntity<List<Car>>(list) {
-            }).build();
-        }
-        return Response.status(204).build();
-    }
-
 }
