@@ -8,7 +8,10 @@
     <div class="card-body" th:if="${noserver==null || !noserver}">
         <h5 class="card-title" th:text="${message}+'Booking'"></h5>
         <p class="card-text">
-        <h2 th:if="${couldnotsave}" class="error">Could not save this time. Please try again later</h2>
+        <h2 th:if="${couldnotsave!=null && bookingmessage==null}" class="error">
+            Could not save this time. Please try again later
+        </h2>
+        <h2 th:if="${bookingmessage!=null}" class="error" th:text="${bookingmessage}"></h2>
         <form action="/booking/new" th:action="@{/booking/new}" th:object="${booking}" method="post">
 
             <div class="form-group">

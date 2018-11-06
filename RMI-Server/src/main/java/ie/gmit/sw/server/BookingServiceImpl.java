@@ -149,12 +149,33 @@ public class BookingServiceImpl extends UnicastRemoteObject implements BookingSe
     }
 
     @Override
-    public boolean isCarAvailable(String carId, BookingTimeFrame timeFrame) throws RemoteException {
+    public boolean isCarAvailable(String carId, BookingTimeFrame timeFrame,String bookingId) throws RemoteException {
+        Bson bookingIdFilter=Filters.exists("_id");
+
+        //Exclude booking with a given id. It is more than likely an booking update
+        if(bookingId!=null && !bookingId.equals("")){
+            bookingIdFilter=Filters.ne("_id", bookingId);
+        }
+
+
         //Check if a car with the given id at the given date range is available
         Bson f2 = Filters.and(
+                bookingIdFilter,
                 Filters.eq("car._id", carId),
-                Filters.lte("bookingTimeFrame.bookingTimeFrom", timeFrame.getBookingTimeTo()),
-                Filters.gte("bookingTimeFrame.bookingTimeTo", timeFrame.getBookingTimeFrom())
+                Filters.or(
+                        Filters.and(
+                                Filters.lte("bookingTimeFrame.bookingTimeFrom", timeFrame.getBookingTimeFrom()),
+                                Filters.gte("bookingTimeFrame.bookingTimeTo", timeFrame.getBookingTimeFrom())
+                        ),
+                        Filters.and(
+                                Filters.lte("bookingTimeFrame.bookingTimeFrom", timeFrame.getBookingTimeTo()),
+                                Filters.gte("bookingTimeFrame.bookingTimeTo", timeFrame.getBookingTimeTo())
+                        ),
+                        Filters.and(
+                                Filters.lte("bookingTimeFrame.bookingTimeFrom", timeFrame.getBookingTimeTo()),
+                                Filters.gte("bookingTimeFrame.bookingTimeTo", timeFrame.getBookingTimeFrom())
+                        )
+                )
         );
         try {
             return bookingCollection.find(f2).first() == null;

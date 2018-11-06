@@ -6,7 +6,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.net.ConnectException;
 
-public abstract class DAO<T> {
+public abstract class DAO {
 
     @Autowired
     public RestUtils restUtils;
@@ -16,12 +16,12 @@ public abstract class DAO<T> {
      *
      * @return
      */
-    public abstract T forId(String id) throws HttpClientErrorException, ConnectException;
+    public abstract Object forId(String id) throws HttpClientErrorException, ConnectException;
 
     /**
      * Save entity
      *
      * @param o
      */
-    public abstract T save(T o) throws HttpClientErrorException, ConnectException;
+    public abstract Object save(Object o) throws HttpClientErrorException, ConnectException;
 }

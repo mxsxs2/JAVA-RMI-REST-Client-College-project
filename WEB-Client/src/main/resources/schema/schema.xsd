@@ -223,4 +223,13 @@
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
+
+    <xsd:element name="bookingmessage">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref='gmit:booking'/>
+                <xsd:element name="message" type="xsd:string"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
 </xsd:schema>

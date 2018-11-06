@@ -89,10 +89,11 @@ public class RMIClient implements BookingService {
      * @param b
      * @return
      */
-    private Object invokeTwo(String method, Object a, Object b) {
+    private Object invokeThree(String method, Object a, Object b, Object c) {
         try {
-            return BookingService.class.getDeclaredMethod(method, a.getClass(), b.getClass()).invoke(connect(), a, b);
+            return BookingService.class.getDeclaredMethod(method, a.getClass(), b.getClass(), c.getClass()).invoke(connect(), a, b, c);
         } catch (Exception e) {
+            e.getMessage();
         }
         return null;
     }
@@ -147,8 +148,8 @@ public class RMIClient implements BookingService {
     }
 
     @Override
-    public boolean isCarAvailable(String carId, BookingTimeFrame timeFrame) {
-        return (Boolean) invokeTwo("isCarAvailable", carId, timeFrame);
+    public boolean isCarAvailable(String carId, BookingTimeFrame timeFrame, String bookingId) {
+        return (Boolean) invokeThree("isCarAvailable", carId, timeFrame, bookingId);
     }
 
     /**

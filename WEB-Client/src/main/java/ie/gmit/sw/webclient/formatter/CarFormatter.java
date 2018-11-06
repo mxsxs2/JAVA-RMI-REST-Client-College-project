@@ -25,7 +25,7 @@ public class CarFormatter implements Formatter<Car> {
     @Override
     public Car parse(String text, Locale locale) throws ParseException {
         try {
-            return this.dao.forId(text);
+            return (Car) this.dao.forId(text);
         } catch (ConnectException e) {
             return null;
         }

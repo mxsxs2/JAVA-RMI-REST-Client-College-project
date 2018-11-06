@@ -1,6 +1,6 @@
 package ie.gmit.sw.restserver;
 
-import ie.gmit.sw.model.Booking;
+import ie.gmit.sw.model.Bookingmessage;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -17,13 +17,13 @@ public interface IBookingService {
     @Produces(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Consumes(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Path("create")
-    Response addBooking(Booking c);
+    Response addBooking(Bookingmessage c);
 
     @PUT
     @Produces(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Consumes(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Path("change")
-    Response changeBooking(Booking c);
+    Response changeBooking(Bookingmessage c);
 
     @DELETE
     @Produces(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})

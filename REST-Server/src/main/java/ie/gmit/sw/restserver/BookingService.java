@@ -1,6 +1,7 @@
 package ie.gmit.sw.restserver;
 
 import ie.gmit.sw.model.Booking;
+import ie.gmit.sw.model.Bookingmessage;
 import ie.gmit.sw.server.RMIClient;
 
 import javax.servlet.ServletContext;
@@ -25,26 +26,63 @@ public class BookingService implements IBookingService {
     }
 
     @Override
-    public Response addBooking(Booking c) {
-        if (c.getCar() == null || c.getBookingTimeFrame() == null || c.getPerson() == null) {
+    public Response addBooking(Bookingmessage bs) {
+        if (bs.getBooking() == null ||
+                bs.getBooking().getCar() == null ||
+                bs.getBooking().getBookingTimeFrame() == null ||
+                bs.getBooking().getPerson() == null) {
             return Response.status(400).build();
         }
-        c.setId(UUID.randomUUID().toString());
-        c.getPerson().setId(UUID.randomUUID().toString());
-        if (RMIClient.getInstance(servletContext).addBooking(c)) {
-            return Response.status(200).entity(c).build();
+        Booking c = bs.getBooking();
+        //Check if the car is available
+        if (RMIClient.getInstance(servletContext).isCarAvailable(
+                c.getCar().getId(),
+                c.getBookingTimeFrame(),
+                c.getId())
+        ) {
+            c.setId(UUID.randomUUID().toString());
+            c.getPerson().setId(UUID.randomUUID().toString());
+            if (RMIClient.getInstance(servletContext).addBooking(c)) {
+                bs.setBooking(c);
+                bs.setMessage("ok");
+                return Response.status(200).entity(bs).build();
+            }
+        } else {
+            bs.setBooking(c);
+            bs.setMessage("carnotavailable");
+            return Response.status(200).entity(bs).build();
         }
+
+
         return Response.status(409).build();
     }
 
     @Override
-    public Response changeBooking(Booking c) {
-        if (c.getCar() == null || c.getBookingTimeFrame() == null || c.getPerson() == null) {
+    public Response changeBooking(Bookingmessage bs) {
+        if (bs.getBooking() == null ||
+                bs.getBooking().getCar() == null ||
+                bs.getBooking().getBookingTimeFrame() == null ||
+                bs.getBooking().getPerson() == null) {
             return Response.status(400).build();
         }
-        if (RMIClient.getInstance(servletContext).changeBooking(c)) {
-            return Response.status(200).entity(c).build();
+        Booking c = bs.getBooking();
+        //Check if the car is available
+        if (RMIClient.getInstance(servletContext).isCarAvailable(
+                c.getCar().getId(),
+                c.getBookingTimeFrame(),
+                c.getId())
+        ) {
+            if (RMIClient.getInstance(servletContext).changeBooking(c)) {
+                bs.setBooking(c);
+                bs.setMessage("ok");
+                return Response.status(200).entity(bs).build();
+            }
+        } else {
+            bs.setBooking(c);
+            bs.setMessage("carnotavailable");
+            return Response.status(200).entity(bs).build();
         }
+        System.out.println("409");
         return Response.status(409).build();
     }
 

@@ -14,7 +14,7 @@ import java.util.List;
 
 @Repository
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class CarDAO extends DAO<Car> {
+public class CarDAO extends DAO {
     @Value("${spring.data.rest.base-path}")
     private String restURI;
     public static String restCarPath = "/car/";
@@ -34,13 +34,13 @@ public class CarDAO extends DAO<Car> {
     }
 
     @Override
-    public Car forId(String id) throws HttpClientErrorException, ConnectException {
+    public Object forId(String id) throws HttpClientErrorException, ConnectException {
         //Filter the cars list to match the id
         return this.getCars().stream().filter((c) -> c.getId().equals(id)).findFirst().get();
     }
 
     @Override
-    public Car save(Car o) {
+    public Object save(Object o) {
         return null;
     }
 

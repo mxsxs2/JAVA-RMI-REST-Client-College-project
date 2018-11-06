@@ -27,12 +27,12 @@ public class CarService implements ICarService {
     }
 
     @Override
-    public Response isCarAvailable(String id, long from, long to) {
+    public Response isCarAvailable(String id, long from, long to, String bid) {
         BookingTimeFrame bt = new BookingTimeFrame();
         bt.setBookingTimeFrom(from);
         bt.setBookingTimeTo(to);
 
-        if (RMIClient.getInstance(servletContext).isCarAvailable(id, bt)) {
+        if (RMIClient.getInstance(servletContext).isCarAvailable(id, bt, bid)) {
             return Response.status(200).build();
         }
         return Response.status(204).build();

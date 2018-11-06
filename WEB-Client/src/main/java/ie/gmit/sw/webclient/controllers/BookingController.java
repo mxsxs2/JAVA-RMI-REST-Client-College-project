@@ -2,6 +2,7 @@ package ie.gmit.sw.webclient.controllers;
 
 import ie.gmit.sw.model.Booking;
 import ie.gmit.sw.model.BookingTimeFrame;
+import ie.gmit.sw.model.Bookingmessage;
 import ie.gmit.sw.model.Car;
 import ie.gmit.sw.webclient.RestUtils;
 import ie.gmit.sw.webclient.dao.BookingDAO;
@@ -110,13 +111,13 @@ public class BookingController {
             return "booking/new";
         } else {
 
-            Booking b = null;
+            Bookingmessage bs = null;
             //Try to modify/save the booking
             try {
                 if (modify != null && modify.equals("true")) {
-                    b = bookingDAO.change(booking);
+                    bs = (Bookingmessage) bookingDAO.change(booking);
                 } else {
-                    b = bookingDAO.save(booking);
+                    bs = (Bookingmessage) bookingDAO.save(booking);
                 }
             } catch (Exception e) {
                 if (RestUtils.isServerAway(e.getMessage())) {
@@ -124,12 +125,16 @@ public class BookingController {
                 }
             }
             //If the success
-            if (b != null) {
+            if (bs != null && bs.getBooking() != null && bs.getMessage().equals("ok")) {
                 //Go to view page
-                return "redirect:/booking/view/" + b.getId();
+                return "redirect:/booking/view/" + bs.getBooking().getId();
             } else {
                 //Show the form again
                 model.put("couldnotsave", true);
+                if (bs != null && bs.getMessage() != null && bs.getMessage().equals("carnotavailable")) {
+                    model.put("bookingmessage", "This car is not available for this renting period");
+                }
+
                 return "booking/new";
             }
         }

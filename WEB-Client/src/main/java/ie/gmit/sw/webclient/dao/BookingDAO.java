@@ -1,6 +1,7 @@
 package ie.gmit.sw.webclient.dao;
 
 import ie.gmit.sw.model.Booking;
+import ie.gmit.sw.model.Bookingmessage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -12,7 +13,7 @@ import java.net.ConnectException;
 
 @Repository
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class BookingDAO extends DAO<Booking> {
+public class BookingDAO extends DAO {
     @Value("${spring.data.rest.base-path}")
     private String restURI;
     public static String restBookingPath = "/booking/";
@@ -28,8 +29,10 @@ public class BookingDAO extends DAO<Booking> {
     }
 
     @Override
-    public Booking save(Booking o) throws HttpClientErrorException, ConnectException {
-        return (Booking) super.restUtils.restRequest(restBookingPath + "/create", o, HttpMethod.PUT);
+    public Object save(Object o) throws HttpClientErrorException, ConnectException {
+        Bookingmessage bs = new Bookingmessage();
+        bs.setBooking((Booking) o);
+        return super.restUtils.restRequest(restBookingPath + "/create", bs, HttpMethod.PUT);
     }
 
     /**
@@ -38,8 +41,10 @@ public class BookingDAO extends DAO<Booking> {
      * @param o
      * @return
      */
-    public Booking change(Booking o) throws HttpClientErrorException, ConnectException {
-        return (Booking) super.restUtils.restRequest(restBookingPath + "/change", o, HttpMethod.PUT);
+    public Object change(Booking o) throws HttpClientErrorException, ConnectException {
+        Bookingmessage bs = new Bookingmessage();
+        bs.setBooking(o);
+        return super.restUtils.restRequest(restBookingPath + "/change", bs, HttpMethod.PUT);
     }
 
     /**

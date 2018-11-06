@@ -76,10 +76,17 @@ public class RestUtils {
         headers.setContentType(MediaType.APPLICATION_XML);
         //Create new request with the new headers
         HttpEntity<Object> request = new HttpEntity<>(obj, headers);
+
         //Get the response from the server
-        ResponseEntity<Object> responseEntity = restTemplate.exchange(restURI + path, method, request, (Class<Object>) obj.getClass());
+        try {
+            ResponseEntity<Object> responseEntity = restTemplate.exchange(restURI + path, method, request, (Class<Object>) obj.getClass());
+            return responseEntity;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("called " + obj.getClass());
         //Return response
-        return responseEntity;
+        return null;
     }
 
     /**
