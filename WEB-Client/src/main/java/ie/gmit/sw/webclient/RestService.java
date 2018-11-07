@@ -7,15 +7,13 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.ConnectException;
 import java.util.Collections;
 
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class RestUtils {
+public class RestService {
     private Environment env;
 
     public static String restURI;
@@ -24,7 +22,7 @@ public class RestUtils {
     public static String restCarPath = "/car/";
 
     @Autowired
-    public RestUtils(@Value("${spring.data.rest.base-path}") final String v) {
+    public RestService(@Value("${spring.data.rest.base-path}") final String v) {
         //Set the rest url from application properties
         restURI = v;
     }
@@ -37,7 +35,7 @@ public class RestUtils {
      * @param obj
      * @return
      */
-    public Object restRequest(String path, Object obj, HttpMethod method) throws HttpClientErrorException, ConnectException {
+    public Object restRequest(String path, Object obj, HttpMethod method) throws Exception {
         //Get the response from the server
         ResponseEntity<Object> responseEntity = doRequest(path, obj, method);
         //Return response
@@ -51,7 +49,7 @@ public class RestUtils {
      * @param obj
      * @return
      */
-    public boolean restBooleanRequest(String path, Object obj, HttpMethod method) throws HttpClientErrorException, ConnectException {
+    public boolean restBooleanRequest(String path, Object obj, HttpMethod method) throws Exception {
         //Get the response from the server
         ResponseEntity<Object> responseEntity = doRequest(path, obj, method);
         //Return response
@@ -65,7 +63,7 @@ public class RestUtils {
      * @param obj
      * @return
      */
-    private ResponseEntity doRequest(String path, Object obj, HttpMethod method) throws HttpClientErrorException, ConnectException {
+    private ResponseEntity doRequest(String path, Object obj, HttpMethod method) throws Exception {
         //Get new template
         RestTemplate restTemplate = new RestTemplate();
         //Get new headers
@@ -78,15 +76,10 @@ public class RestUtils {
         HttpEntity<Object> request = new HttpEntity<>(obj, headers);
 
         //Get the response from the server
-        try {
-            ResponseEntity<Object> responseEntity = restTemplate.exchange(restURI + path, method, request, (Class<Object>) obj.getClass());
-            return responseEntity;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println("called " + obj.getClass());
-        //Return response
-        return null;
+
+        ResponseEntity<Object> responseEntity = restTemplate.exchange(restURI + path, method, request, (Class<Object>) obj.getClass());
+        return responseEntity;
+
     }
 
     /**
@@ -97,6 +90,6 @@ public class RestUtils {
      */
     public static boolean isServerAway(String errorMessage) {
         if (errorMessage == null) return false;
-        return (errorMessage.contains("404") || errorMessage.contains("500") || errorMessage.contains("Connection refused"));
+        return (errorMessage.contains("404") || errorMessage.contains("500") || errorMessage.contains("Connection refused") || errorMessage.contains("I/O"));
     }
 }

@@ -1,5 +1,5 @@
 # JAVA-RMI-REST-Client-College-project
-JAVA Remote Method Invocation + JAVA REST server with XML/JSON + SPRING Tymeleaft Client Project for college.
+JAVA Remote Method Invocation + JAVA REST server with XML/JSON + SPRING Thymeleaf Client Project for college.
 
 Ideally this project should have been split up to multiple repositories, but as it is a college project I left them in one place for convinience.
 ## Overview (From odiginal reruirements document)
@@ -38,44 +38,54 @@ Remote Object into the RMI registry using the name “databaseservice”._
 # Implementation
 
 ## Datamodel
-The datamodel was created as an [XML Schema](https://www.w3.org/standards/xml/schema). Designed the Schema and modifed as I developed the application. I wanted to avoid the creation of the classes and annotate them manually.
+The datamodel was created as an [XML Schema](https://www.w3.org/standards/xml/schema). I designed the Schema and modifed as I developed the application. I wanted to avoid the creation of the classes and annotate them manually.
 ### The model entities
 * Address
 
-    Stores the address of the costumer
+    Stores the address of the customers.
 * Person
 
-    Stores the id, name and the address of the customer
+    Stores the ID, name and the address of the customer.
 * Car
 
-    Stores details of a car e.g id, model, make, color
+    Stores details of a car i.e. ID, model, make and colour.
 * Cars
 
-    Wrapper for a list of the cars (Needed for data transfer from REST-Server to WEB-client)
+    Wrapper for a list of cars (Needed for data transfer from REST-Server to WEB-client).
 * BookingTimeFrame
 
-    Stores the booking start and end times in long format.
+    Stores the booking start and end time in long format.
 * Booking
 
-    Stores the booking id, person, car, bookingtimeframe and the reservation time in long format
+    Stores the booking ID, customer information, car information, bookingtimeframe and the reservation time in long format.
 * BookingMessage
 
     Wrapper for a booking and a message. (Needed for data transfer from REST-Server to WEB-client)
 ### Model generator
 The model is generated with Maven `maven-jaxb2-plugin` plugin. This allows the generation of the model at maven compile time. The generated files resides at `ie.gmit.sw.model` package in Maven's `target/generated-sources/xjc` folder.
 #### Bindings
-I incorporated a bindig file to set the binding process `simple` (Which adds `XMLRootElement`) and add the `serializable` to every class. This allows the smoth conversion for RMI and JAXB and MongoDB Driver.
+I incorporated a bindig file to set the binding process `simple` (Which adds `XMLRootElement`) and adds `Serializable` interface to every class. This allows the smooth conversion for from XML to Object and vica-versa.
 #### Annotations
-* `jaxb2-basics-annotate` has been used to generate `javax.validation` annotations for Spring Boots validation. 
+* `jaxb2-basics-annotate` has been used to generate `javax.validation` annotations for Spring Boot's validation. 
 * `jaxb2-basics` has been used to generate `toString` methods and setter methods for `List` types (setter is not generated with plain xjc)
 
-## 1. RMI-Server
+
+## 1. Database
+The underlying database is MongoDB. The structure is simple:
+* `carbooking` as DB
+    * `bookings` collection
+    * `cars` collection
+Each booking contains a copy of a car. If I would only have  the `_id` stored that would be against MonogDB's principles. If I would store only at each booking, then I would lose the reference to the cars and its information when a booking is deleted.
+
+Denormalisation is completely normal with document stores.
+
+## 2. RMI-Server
 This project is the database connector.
 ### Database
-MongoDB is used here a simple class Represends the connection and configuration of the database. This class is used for CRUD operations by injecting into the RMI service implementation.
+MongoDB is used here a simple class represends the connection and configuration of the database. This class is used for CRUD operations by injecting into the RMI service implementation.
 The database connection is fully configruable with command line arguments.(See at RMI-Server->Run).
 #### Mongo/Bson Codec
-Bson's default codec is used for data conversion. Is is very useful as i do not have to bother with conversion of XML to Objects and vica-versa. This is important, I can change the model without changing the implementation. (Obviosly the database has to be emptied then)
+Bson's default codec is used for data conversion. Is is very useful as i do not have to convert the XML to Objects and vica-versa. This is important as it allows me to change the model without changing the implementation. (Obviosly the database has to be emptied then)
 ### RMI Service implementation
 This class is the implementation of `BookingService` interface. The class handles every booking and car related operations by colling the appropriate MongoDb methods.
 ### RMI Server
@@ -83,7 +93,7 @@ The server is a simple RMI registry. This is fully configruable with command lin
 ### ServiceSetup
 Contains the main class for the application
 ### Run
-The project is packaged with Maven. Frirst it has to be packaged by `mvn install`. Which generates two files into Maven's `target` folder:
+The project is packaged with Maven. First it has to be packaged by `mvn install`, which generates two files into Maven's `target` folder:
 * RMI-Server-1.0.SNAPSHOT.jar
 * RMI-Server-1.0.SNAPSHOT-jar-with-dependencies.jar
 
@@ -99,3 +109,88 @@ The server can be fully configured from command line with the following argumens
 * `-dbname` is the database name for MongoDB
 Each one of them can be used individaully or with others. They has to be used by the following way:
 ``` java -jar RMI-Server-1.0.SNAPSHOT-jar-with-dependencies.jar -port 1200```
+
+## 3. REST-Server
+This project connects to the RMI-Server and it is a HTTP server
+### RMI Connection
+An `RMIClient` singleton class is implemented from the same `BookingService` interface as the RMI-Server.There are three helper methods:
+* `connect` Returns the RMI resource from an RMI URL
+* `invokeNull`,`invokeOne` and `invokeThree` are calling the appropriate interface methods on the `connect()`'s return resource. Heavily relies on reflection.
+### REST
+The server is implementeted with JAX-RS/Jersey with three services
+* `BookingService` which deals with the booking related request
+* `CarService` which deals with the car related requests
+* `ProtectedService` which allows the car addition and can return a list of bookings
+#### Response codes
+* 200 - All good a resource will be returned: `Booking`,`Car`,`Cars`,`BookingMessage`
+* 204 - The request was interpreted correctly bot no resource found
+* 400 - One(or more) of the required field(s) is missing
+* 404 - When an endpoint is not found
+* 409 - The resource already exists
+* 500 - Server error (during my tests it did not occour but it is possible)
+#### Endpoints
+I used PUT over POST as it is idempotent, therefore I can just return 200
+* GET - `booking/{id}` returns a booking
+* PUT - `booking/create` saves a new booking
+* PUT - `booking/change` changes (it actually replaces) a booking (since it replaces, I choose to use PUT rather than POST)
+* DELETE - `booking/{id}` deletes a booking
+* GET - `car/{id}` returns a car
+* PUT - `car/{id}/{from}/{to}/{bookingid:(/bookingid/[^/]+?)?}` returns the availabily of a car for a given date range. If the booking ID is present, the database search excludes that ID, this is used for booking change
+* GET - `car/list` returns the `Cars` wrapper class with the list of cars in it
+* PUT - `admin/car` saves a new car
+* GET - `admin/booking/list` returns a list of bookings
+### Deploy
+The project is can be run on tomcat with maven: ```mvn tomcat:run```.
+#### Server configuration
+Connection to the RMI server can be modified at web.xml. I tried to make the connection modifiable from command line. However, it seemed to be a great effort to capture the command line arguments as they have to travel through 3 layers: `Tomcat->Jersey->RMI setup`.
+
+Tomcat port can be specified as follows:
+```mvn -Dmaven.tomcat.port=8081 tomcat:run```
+
+## 4. WEB-Client
+The webclient is a webserver serving the GUI and connection to the REST end points. It is a Spring Boot application with Maven and Thymeleaf
+### GUI
+The GUI is created with Thymeleaf. It uses normal HTML with additional expressions, making the development much easier.
+#### Templates
+There is 3 main templates:
+* Index - the landing page
+* View - search box for finding bookings by ID and renders the found model. It also has the option for changing or deleting a model
+* New - renders a form for creating or modifind a booking. It has a dropdown with all the cars.
+#### Fragments
+Every fragment for the layout is stored in `templates/fragments/header`. These fragments are re-used on every page. It renders the menu, header links and JavaScripts and the server not available error message.
+#### Webjars
+For bootstrap `org.webjars` is used. It is a better approach for a small project than using CDN and it is a lot better aproach than having the resources in the static folder.
+#### Data formatters
+I had to use formatters for the car dropdown and for the date and time:
+* The conversion for car dropdown is necessary as a complete class cannot be used as field value. I used the car's ID as value and I converted it on submission to an object.
+* The time formatter was necessary as I stored the datetime as `long` type in the database.
+#### Form validation
+Form validation is done by Spring Boot's built-in mechanishm. The bean models has been apropriately annotated in the XML schema.  
+### DAO
+Both Car and Booking models has their own DAOs. They utilises the `RestService` service class which provides the connection to the rest server.
+### Controllers
+This is the back end for the GUI templates. They utilises the DAO classes to get the models/messages into the apropriate templates.
+### Run
+The project is packaged with Maven. First it has to be packaged by `mvn install`.
+To run it:
+```mvn spring-boot:run```
+#### Server configuration
+The configuration is stored at `application.properties` file. The port and the rest url can be modified here. They can also be modified in command line:
+```mvn spring-boot:run -Dspring-boot.run.arguments=--resturl=http://127.0.0.1:8081/REST-Server,--port=81```
+Where
+* `--port` is the server port for spring boot
+* `--resturl` is the url for the rest server
+
+
+## What could be added
+* REST protected features has no GUI buil into Web-Client
+* REST protected features could have some sort of login and session management
+* Each individual project could be added to Docker containers and spin up on AWS or some other cloud server
+* WEB-Client cloud be AJAX rather than reload on form submission
+* The generated `ie.gmit.sw.model` package could be an individual project, in which case the generated artefact should be added as a dependency in each project.
+
+## Extras
+* All three projects are full Maven projects, nicely organised pom files with dependencies
+* The model is properly generated from schemas with extra annotations and extre methods
+* The web clients structure is thoughfully designed and excuted. (Additionally with an excellent GUI)
+* The servers and the connections between them is fully configurable

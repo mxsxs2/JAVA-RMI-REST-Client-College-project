@@ -8,7 +8,6 @@ import org.springframework.expression.ParseException;
 import org.springframework.format.Formatter;
 import org.springframework.stereotype.Service;
 
-import java.net.ConnectException;
 import java.util.Locale;
 
 @Service
@@ -26,7 +25,7 @@ public class CarFormatter implements Formatter<Car> {
     public Car parse(String text, Locale locale) throws ParseException {
         try {
             return (Car) this.dao.forId(text);
-        } catch (ConnectException e) {
+        } catch (Exception e) {
             return null;
         }
     }

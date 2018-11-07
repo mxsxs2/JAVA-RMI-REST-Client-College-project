@@ -25,7 +25,7 @@ public class ProtectedService implements IProtectedService {
         if (RMIClient.getInstance(servletContext).addCar(c)) {
             return Response.status(200).entity(c).build();
         }
-        return Response.status(409).build();
+        return Response.status(204).build();
     }
 
     @Override

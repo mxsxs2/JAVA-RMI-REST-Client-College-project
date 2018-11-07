@@ -4,11 +4,10 @@ import ie.gmit.sw.model.Booking;
 import ie.gmit.sw.model.BookingTimeFrame;
 import ie.gmit.sw.model.Bookingmessage;
 import ie.gmit.sw.model.Car;
-import ie.gmit.sw.webclient.RestUtils;
+import ie.gmit.sw.webclient.RestService;
 import ie.gmit.sw.webclient.dao.BookingDAO;
 import ie.gmit.sw.webclient.dao.CarDAO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -23,10 +22,6 @@ import java.util.List;
 @Controller
 @RequestMapping("/booking")
 public class BookingController {
-
-    @Value("${spring.data.rest.base-path}")
-    private String restURI;
-
     @Autowired
     private CarDAO carDAO;
     @Autowired
@@ -53,7 +48,7 @@ public class BookingController {
         try {
             c = carDAO.getCars();
         } catch (Exception e) {
-            if (RestUtils.isServerAway(e.getMessage())) {
+            if (RestService.isServerAway(e.getMessage())) {
                 model.put("noserver", true);
             }
         }
@@ -94,7 +89,7 @@ public class BookingController {
         try {
             c = carDAO.getCars();
         } catch (Exception e) {
-            if (RestUtils.isServerAway(e.getMessage())) {
+            if (RestService.isServerAway(e.getMessage())) {
                 model.put("noserver", true);
             }
         }
@@ -120,7 +115,7 @@ public class BookingController {
                     bs = (Bookingmessage) bookingDAO.save(booking);
                 }
             } catch (Exception e) {
-                if (RestUtils.isServerAway(e.getMessage())) {
+                if (RestService.isServerAway(e.getMessage())) {
                     model.put("noserver", true);
                 }
             }
@@ -147,7 +142,7 @@ public class BookingController {
         try {
             b = bookingDAO.forId(id);
         } catch (Exception e) {
-            if (RestUtils.isServerAway(e.getMessage())) {
+            if (RestService.isServerAway(e.getMessage())) {
                 model.put("noserver", true);
             }
         }
@@ -177,7 +172,7 @@ public class BookingController {
             b = bookingDAO.forId(id);
             c = carDAO.getCars();
         } catch (Exception e) {
-            if (RestUtils.isServerAway(e.getMessage())) {
+            if (RestService.isServerAway(e.getMessage())) {
                 model.put("noserver", true);
             }
         }
@@ -214,7 +209,7 @@ public class BookingController {
             //Try to get it again to confirm
             b = bookingDAO.forId(id);
         } catch (Exception e) {
-            if (RestUtils.isServerAway(e.getMessage())) {
+            if (RestService.isServerAway(e.getMessage())) {
                 model.put("noserver", true);
             }
         }

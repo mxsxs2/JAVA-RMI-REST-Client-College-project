@@ -2,21 +2,16 @@ package ie.gmit.sw.webclient.dao;
 
 import ie.gmit.sw.model.Car;
 import ie.gmit.sw.model.Cars;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.client.HttpClientErrorException;
 
-import java.net.ConnectException;
 import java.util.List;
 
 @Repository
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class CarDAO extends DAO {
-    @Value("${spring.data.rest.base-path}")
-    private String restURI;
     public static String restCarPath = "/car/";
 
     public CarDAO() {
@@ -28,13 +23,13 @@ public class CarDAO extends DAO {
      *
      * @return
      */
-    public List<Car> getCars() throws HttpClientErrorException, ConnectException {
+    public List<Car> getCars() throws Exception {
         //Get a list of cars from the rest server
-        return ((Cars) super.restUtils.restRequest(restCarPath + "list", new Cars(), HttpMethod.GET)).getCars();
+        return ((Cars) super.restService.restRequest(restCarPath + "list", new Cars(), HttpMethod.GET)).getCars();
     }
 
     @Override
-    public Object forId(String id) throws HttpClientErrorException, ConnectException {
+    public Object forId(String id) throws Exception {
         //Filter the cars list to match the id
         return this.getCars().stream().filter((c) -> c.getId().equals(id)).findFirst().get();
     }

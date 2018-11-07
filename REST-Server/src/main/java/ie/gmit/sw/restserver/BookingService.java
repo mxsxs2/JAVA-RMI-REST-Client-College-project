@@ -52,9 +52,9 @@ public class BookingService implements IBookingService {
             bs.setMessage("carnotavailable");
             return Response.status(200).entity(bs).build();
         }
-
-
-        return Response.status(409).build();
+        bs.setBooking(null);
+        bs.setMessage("couldnotaddduetounknownerror");
+        return Response.status(200).entity(bs).build();
     }
 
     @Override
@@ -82,8 +82,7 @@ public class BookingService implements IBookingService {
             bs.setMessage("carnotavailable");
             return Response.status(200).entity(bs).build();
         }
-        System.out.println("409");
-        return Response.status(409).build();
+        return Response.status(409).entity(bs).build();
     }
 
     @Override

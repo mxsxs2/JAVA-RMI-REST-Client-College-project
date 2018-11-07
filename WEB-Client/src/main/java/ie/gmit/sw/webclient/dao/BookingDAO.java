@@ -2,20 +2,14 @@ package ie.gmit.sw.webclient.dao;
 
 import ie.gmit.sw.model.Booking;
 import ie.gmit.sw.model.Bookingmessage;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.client.HttpClientErrorException;
-
-import java.net.ConnectException;
 
 @Repository
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class BookingDAO extends DAO {
-    @Value("${spring.data.rest.base-path}")
-    private String restURI;
     public static String restBookingPath = "/booking/";
 
     public BookingDAO() {
@@ -23,16 +17,16 @@ public class BookingDAO extends DAO {
     }
 
     @Override
-    public Booking forId(String id) throws HttpClientErrorException, ConnectException {
+    public Booking forId(String id) throws Exception {
         //Get the booking
-        return (Booking) super.restUtils.restRequest(restBookingPath + "/" + id, new Booking(), HttpMethod.GET);
+        return (Booking) super.restService.restRequest(restBookingPath + "/" + id, new Booking(), HttpMethod.GET);
     }
 
     @Override
-    public Object save(Object o) throws HttpClientErrorException, ConnectException {
+    public Object save(Object o) throws Exception {
         Bookingmessage bs = new Bookingmessage();
         bs.setBooking((Booking) o);
-        return super.restUtils.restRequest(restBookingPath + "/create", bs, HttpMethod.PUT);
+        return super.restService.restRequest(restBookingPath + "/create", bs, HttpMethod.PUT);
     }
 
     /**
@@ -41,10 +35,10 @@ public class BookingDAO extends DAO {
      * @param o
      * @return
      */
-    public Object change(Booking o) throws HttpClientErrorException, ConnectException {
+    public Object change(Booking o) throws Exception {
         Bookingmessage bs = new Bookingmessage();
         bs.setBooking(o);
-        return super.restUtils.restRequest(restBookingPath + "/change", bs, HttpMethod.PUT);
+        return super.restService.restRequest(restBookingPath + "/change", bs, HttpMethod.PUT);
     }
 
     /**
@@ -53,8 +47,8 @@ public class BookingDAO extends DAO {
      * @param id
      * @return
      */
-    public boolean delete(String id) throws HttpClientErrorException, ConnectException {
-        return super.restUtils.restBooleanRequest(restBookingPath + "/delete/" + id, new Booking(), HttpMethod.DELETE);
+    public boolean delete(String id) throws Exception {
+        return super.restService.restBooleanRequest(restBookingPath + "/delete/" + id, new Booking(), HttpMethod.DELETE);
     }
 
 }

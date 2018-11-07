@@ -28,6 +28,6 @@ public interface IBookingService {
     @DELETE
     @Produces(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Consumes(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @Path("delete/{id}")
+    @Path("{id}")
     Response deleteBooking(@PathParam("id") String id);
 }
