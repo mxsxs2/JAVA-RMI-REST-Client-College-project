@@ -98,7 +98,8 @@ The project is packaged with Maven. First it has to be packaged by `mvn install`
 * RMI-Server-1.0.SNAPSHOT-jar-with-dependencies.jar
 
 As their name shows one is with dependencies and one is without.
-They are both runnable jar files, however _ RMI-Server-1.0.SNAPSHOT-jar-with-dependencies.jar_ is easier to run: 
+They are both runnable jar files, however _RMI-Server-1.0.SNAPSHOT-jar-with-dependencies.jar_ is easier to run:
+ 
 ``` java -jar RMI-Server-1.0.SNAPSHOT-jar-with-dependencies.jar```
 #### Server configuration
 The server can be fully configured from command line with the following argumens:
