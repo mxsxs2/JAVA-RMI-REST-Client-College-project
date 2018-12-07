@@ -2,9 +2,23 @@ import requests
 import json
 import sys
 import os
+import argparse
 
+
+# Add description
+parser = argparse.ArgumentParser(
+    description='Car hire admin client')
+# Add command line arguments
+parser.add_argument('--resturl',
+                    help='The url to connect to. Default is http://localhost:8080/REST-Server/')
+# Parse the arguments
+args = parser.parse_args()
 # Set endpoint
-enpoint = "http://localhost:8080/REST-Server/"
+if args.resturl != None:
+    endpoint = args.resturl
+else:
+    endpoint = "http://localhost:8080/REST-Server/"
+
 # Set content-type and accept to json
 headers = {'content-type': 'application/json', 'accept': 'application/json'}
 
@@ -13,12 +27,12 @@ class AdminService:
     """
     Class to interact with the admin service
     """
-    global enpoint
+    global endpoint
     global headers
 
     def __init__(self):
         # Set endpoint
-        self.endpoint = enpoint+"admin/"
+        self.endpoint = endpoint+"admin/"
 
     def getBookingList(self):
         # Do request
@@ -105,5 +119,10 @@ class Menu:
             print("The could not be added try again later")
 
 
-# Start the menu
-Menu()
+try:
+    # Try to connect to the endpoint
+    requests.get(endpoint, headers=headers)
+    # Start the menu
+    Menu()
+except Exception:
+    print("The url provided is not available.")

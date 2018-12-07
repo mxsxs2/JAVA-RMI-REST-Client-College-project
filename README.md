@@ -182,6 +182,18 @@ Where
 * `--port` is the server port for spring boot
 * `--resturl` is the url for the rest server
 
+## 4. Python-Client
+A simple command line client written in python to interact with the admin side of rest server. In only has to functions:
+* Get booking list
+* Add a new car.
+This application should be used to add a new car to the database. It is just a demo of the JSON functionality of the REST server not a full client.
+### Run
+The easiest way to set up the python environment and get all required libraries is to install [Anaconda](https://www.anaconda.com/download/)
+To run the application:
+```python client.py```
+
+Optionally the rest server's url can be provided the following way:
+```python client.py --resturl http://localhost:8080/REST-Server/```
 
 ## What could be added
 * REST protected features has no GUI buil into Web-Client
