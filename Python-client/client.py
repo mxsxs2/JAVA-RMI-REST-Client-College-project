@@ -1,5 +1,8 @@
 import requests
 import json
+import sys
+import os
+
 # Set endpoint
 enpoint = "http://localhost:8080/REST-Server/"
 # Set content-type and accept to json
@@ -34,15 +37,73 @@ class AdminService:
         return False
 
 
-adminservice = AdminService()
+class Menu:
+    """
+    Class to show and interact with the menu.
+    """
 
-adminservice.getBookingList()
+    def __init__(self):
+        # Clear the console
+        os.system('clear')
+        # Initialise admin service
+        self.adminservice = AdminService()
+        # Show the menu
+        self.mainMenu()
 
-car = {
-    "id": "99CE1524",
-    "model": "BMW",
-    "make": "M3",
-    "color": "Black"
-}
+    def mainMenu(self):
+        item = "-1"
+        while item != "0":
+            print("\nPlease choose the menu you want to start:")
+            print("1. Get booking list")
+            print("2. Add new car")
+            print("0. Exit")
+            item = input(" >>  ")
+            # If the user choose
+            if item == "1":
+                self.getBookingList()
+            if item == "2":
+                self.addCar()
 
-print(adminservice.addCar(car))
+    def getBookingList(self):
+        """
+        Prints out the list of bookings
+        """
+        data = self.adminservice.getBookingList()
+        if len(data) > 0:
+            print("\nBookings:")
+            for d in data:
+                print("\n")
+                for k, v in d.items():
+                    print("%s : %s" % (k, v))
+        else:
+            print("\n No bookings.")
+
+    def addCar(self):
+        """
+        Menu for adding a car
+        """
+        def getInput(desc, minLength=0, maxLength=100):
+            """
+            Input validator
+            """
+            while 1 == 1:
+                print(desc+":")
+                i = input(" >>  ")
+                if len(i) > minLength and len(i) < maxLength:
+                    return i
+
+        car = {
+            "id": getInput(desc="Car reg", minLength=7, maxLength=10),
+            "model": getInput("Model"),
+            "make": getInput("Make"),
+            "color": getInput("Color")
+        }
+
+        if self.adminservice.addCar(car) == True:
+            print("The car is added")
+        else:
+            print("The could not be added try again later")
+
+
+# Start the menu
+Menu()
