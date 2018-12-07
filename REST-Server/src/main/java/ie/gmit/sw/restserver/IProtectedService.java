@@ -11,7 +11,7 @@ public interface IProtectedService {
     @Produces(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Consumes(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Path("add/car")
-    Response getCar(Car c);
+    Response addCar(Car c);
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})

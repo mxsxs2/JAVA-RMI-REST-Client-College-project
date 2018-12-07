@@ -1,5 +1,5 @@
 import requests
-
+import json
 # Set endpoint
 enpoint = "http://localhost:8080/REST-Server/"
 # Set content-type and accept to json
@@ -17,17 +17,32 @@ class AdminService:
         # Set endpoint
         self.endpoint = enpoint+"admin/"
 
-    def getlist(self):
+    def getBookingList(self):
         # Do request
         r = requests.get(self.endpoint+'booking/list', headers=headers)
-        # Convert to json
-        data = r.json()
-        # Loop the list
-        for booking in data:
-            # Print each
-            print(booking)
+        if r.status_code == 200:
+            # Convert to json
+            return r.json()
+        return []
+
+    def addCar(self, car):
+        # Do request
+        r = requests.put(self.endpoint+'add/car',
+                         headers=headers, data=json.dumps(car))
+        if r.status_code == 200 or r.status_code == 204:
+            return True
+        return False
 
 
 adminservice = AdminService()
 
-adminservice.getlist()
+adminservice.getBookingList()
+
+car = {
+    "id": "99CE1524",
+    "model": "BMW",
+    "make": "M3",
+    "color": "Black"
+}
+
+print(adminservice.addCar(car))

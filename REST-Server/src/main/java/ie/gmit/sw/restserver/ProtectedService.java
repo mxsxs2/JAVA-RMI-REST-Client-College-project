@@ -18,7 +18,7 @@ public class ProtectedService implements IProtectedService {
     private ServletContext servletContext;
 
     @Override
-    public Response getCar(Car c) {
+    public Response addCar(Car c) {
         if (c.getId() == null || c.getModel() == null || c.getMake() == null || c.getColor() == null) {
             return Response.status(400).build();
         }

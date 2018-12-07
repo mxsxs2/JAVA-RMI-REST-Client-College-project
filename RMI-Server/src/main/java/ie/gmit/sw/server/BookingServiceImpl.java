@@ -66,7 +66,7 @@ public class BookingServiceImpl extends UnicastRemoteObject implements BookingSe
     public boolean changeBooking(Booking b) throws RemoteException {
         try {
             Document d=Document.parse(objectToJSON(b));
-            //Remove the _id for replace to awoid an exception
+            //Remove the _id for replace to avoid an exception
             d.remove("_id");
             //Parse the object into JSON then try to find and replace
             UpdateResult updateResult = bookingCollection.replaceOne(
@@ -114,8 +114,12 @@ public class BookingServiceImpl extends UnicastRemoteObject implements BookingSe
     public boolean addCar(Car c) throws RemoteException {
 
         try {
+            Document d=Document.parse(objectToJSON(c));
+            //Replace the id key
+            d.append("_id",c.getId());
+            d.remove("id");
             //Insert the document
-            carCollection.insertOne(Document.parse((objectToJSON(c))));
+            carCollection.insertOne(d);
             //Check if it was added
             return carCollection.find(Filters.eq("_id", c.getId())).first() != null;
         } catch (Exception e) {
