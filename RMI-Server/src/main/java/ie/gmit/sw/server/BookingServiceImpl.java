@@ -31,6 +31,8 @@ public class BookingServiceImpl extends UnicastRemoteObject implements BookingSe
 
     protected BookingServiceImpl(MongoDatabase db) throws RemoteException {
         super();
+        //Some systems the jaxb.properties file is not picked up.
+        //System.setProperty("javax.xml.bind.context.factory", "org.eclipse.persistence.jaxb.JAXBContextFactory");
         bookingCollection = db.getCollection(bookingCollectionName, Booking.class);
         carCollection = db.getCollection(carCollectionName, Car.class);
     }

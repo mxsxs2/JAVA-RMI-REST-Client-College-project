@@ -100,7 +100,7 @@ The project is packaged with Maven. First it has to be packaged by `mvn install`
 As their name shows one is with dependencies and one is without.
 They are both runnable jar files, however _RMI-Server-1.0.SNAPSHOT-jar-with-dependencies.jar_ is easier to run:
  
-``` java -jar RMI-Server-1.0.SNAPSHOT-jar-with-dependencies.jar```
+``` java -jar RMI-Server-1.0-SNAPSHOT-jar-with-dependencies.jar```
 #### Server configuration
 The server can be fully configured from command line with the following argumens:
 * `-port` is the port for RMI registry
@@ -109,7 +109,7 @@ The server can be fully configured from command line with the following argumens
 * `-dbhost` is the host for MongoDB
 * `-dbname` is the database name for MongoDB
 Each one of them can be used individaully or with others. They has to be used by the following way:
-``` java -jar RMI-Server-1.0.SNAPSHOT-jar-with-dependencies.jar -port 1200```
+``` java -jar RMI-Server-1.0-SNAPSHOT-jar-with-dependencies.jar -port 1200```
 
 ## 3. REST-Server
 This project connects to the RMI-Server and it is a HTTP server
