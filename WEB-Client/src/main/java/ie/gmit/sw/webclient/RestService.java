@@ -1,6 +1,5 @@
 package ie.gmit.sw.webclient;
 
-import org.omg.CORBA.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -14,7 +13,6 @@ import java.util.Collections;
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class RestService {
-    private Environment env;
 
     public static String restURI;
 
